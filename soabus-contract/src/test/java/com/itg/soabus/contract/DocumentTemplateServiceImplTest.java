@@ -30,10 +30,19 @@ import com.itg.soabus.contract.domain.TradeContractItem;
 public class DocumentTemplateServiceImplTest {
 
 	@Autowired
-	private DocumentTemplateService s;
+	private DocumentTemplateServiceImpl s;
 
 	final Logger logger = LoggerFactory
 			.getLogger(DocumentTemplateServiceImplTest.class);
+
+	@Test
+	public void testStartContractAduitWorkflow() {
+		TradeContract tradeContract = TradeContract
+				.findTradeContractsByContractNoEquals("contract_no")
+				.getSingleResult();
+		s.startContractAduitWorkflow("clw", tradeContract, "172.16.10.54:8080");
+
+	}
 
 	@Test
 	public void testCheckAuthByLdap() throws NoSuchMethodException,

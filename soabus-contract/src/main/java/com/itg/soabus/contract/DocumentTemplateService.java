@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.itg.soabus.contract.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
+import com.itg.soabus.messaging.TradeContractWorkflow;
 
 import javax.jws.WebMethod;
 import javax.jws.WebResult;
@@ -25,7 +26,8 @@ public interface DocumentTemplateService {
 
 	@WebMethod(operationName = "generateDocument")
 	public Result generateDocument(String userName, String password,
-			TradeContract tradeContract, String templateName
-			) throws SerialException, SQLException;
+			TradeContract tradeContract, String templateName)
+			throws SerialException, SQLException;
 
+	public void processMessage(TradeContractWorkflow flow);
 }

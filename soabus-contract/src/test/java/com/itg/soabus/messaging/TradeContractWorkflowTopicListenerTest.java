@@ -22,15 +22,6 @@ public class TradeContractWorkflowTopicListenerTest {
 	private TradeContractWorkflowTopicListener tradeContractWorkflowTopicListener;
 
 
-	@Test
-	public void test() {
 
-		TradeContract tradeContract = TradeContract
-				.findTradeContractsByContractNoEquals("contract_no")
-				.getSingleResult();
-		tradeContractWorkflowTopicListener.startContractAduitWorkflow(
-				"clw", tradeContract, "172.16.10.54:8080");
-
-	}
 
 }
