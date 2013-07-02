@@ -293,6 +293,8 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 				makeProperty("zje", tradeContract.getTtlPurchaseAmount()
 						.toString()));
 
+		String bb = port.getPropValue("BB", "USD");
+		logger.debug(bb);
 		properties.getProperty().add(makeProperty("BB", "2"));
 
 		properties.getProperty().add(makeProperty("hqfs", creatorid));
@@ -322,21 +324,22 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		String r = port.createRequest(in0);
 
 		logger.debug("call webservice result:" + r);
-		RequestInfo out2 = port.getRequest(77093);
 
-		JAXBElement<ArrayOfProperty> pp = out2.getMainTableInfo().getValue()
-				.getProperty();
+		// RequestInfo out2 = port.getRequest(77093);
 
-		ArrayOfProperty ap = pp.getValue();
+		// JAXBElement<ArrayOfProperty> pp = out2.getMainTableInfo().getValue()
+		// .getProperty();
 
-		for (Property p : ap.getProperty()) {
+		// ArrayOfProperty ap = pp.getValue();
 
-			if (p.getValue().getValue().equals("")) {
-				continue;
-			}
-			System.out.println(p.getName().getValue() + ":"
-					+ p.getValue().getValue());
-		}
+		// for (Property p : ap.getProperty()) {
+
+		// if (p.getValue().getValue().equals("")) {
+		// continue;
+		// }
+		// logger.debug(p.getName().getValue() + ":"
+		// + p.getValue().getValue());
+		// }
 
 		tradeContract.setOaResponse(r);
 
