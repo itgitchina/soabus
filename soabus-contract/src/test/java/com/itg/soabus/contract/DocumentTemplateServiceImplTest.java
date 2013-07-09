@@ -120,7 +120,7 @@ public class DocumentTemplateServiceImplTest {
 		tc.setItems(items);
 
 		Result r = s.generateDocument("clw@itg.net", "630821", tc,
-				"\u4E70\u5356\u5408\u540C");
+				"\u4E70\u5356\u5408\u540C-采购", "\u4E70\u5356\u5408\u540C-销售");
 
 		Assert.assertEquals(new Integer(0), r.getResult());
 

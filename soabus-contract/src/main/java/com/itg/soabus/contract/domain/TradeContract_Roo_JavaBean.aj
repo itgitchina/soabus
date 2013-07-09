@@ -34,6 +34,14 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.company = company;
     }
     
+    public String TradeContract.getCompanyEn() {
+        return this.companyEn;
+    }
+    
+    public void TradeContract.setCompanyEn(String companyEn) {
+        this.companyEn = companyEn;
+    }
+    
     public String TradeContract.getSupplier() {
         return this.supplier;
     }
@@ -106,6 +114,14 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.purchaseAmtInWords = purchaseAmtInWords;
     }
     
+    public String TradeContract.getPurchaseAmtInEnWords() {
+        return this.purchaseAmtInEnWords;
+    }
+    
+    public void TradeContract.setPurchaseAmtInEnWords(String purchaseAmtInEnWords) {
+        this.purchaseAmtInEnWords = purchaseAmtInEnWords;
+    }
+    
     public Double TradeContract.getTtlSalesAmount() {
         return this.ttlSalesAmount;
     }
@@ -138,12 +154,116 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.salesCurrency = salesCurrency;
     }
     
+    public String TradeContract.getPruchaseTradingTerms() {
+        return this.pruchaseTradingTerms;
+    }
+    
+    public void TradeContract.setPruchaseTradingTerms(String pruchaseTradingTerms) {
+        this.pruchaseTradingTerms = pruchaseTradingTerms;
+    }
+    
+    public String TradeContract.getSalesTradingTerms() {
+        return this.salesTradingTerms;
+    }
+    
+    public void TradeContract.setSalesTradingTerms(String salesTradingTerms) {
+        this.salesTradingTerms = salesTradingTerms;
+    }
+    
     public String TradeContract.getOaResponse() {
         return this.oaResponse;
     }
     
     public void TradeContract.setOaResponse(String oaResponse) {
         this.oaResponse = oaResponse;
+    }
+    
+    public String TradeContract.getSupplierAddress() {
+        return this.supplierAddress;
+    }
+    
+    public void TradeContract.setSupplierAddress(String supplierAddress) {
+        this.supplierAddress = supplierAddress;
+    }
+    
+    public String TradeContract.getSupplierTel() {
+        return this.supplierTel;
+    }
+    
+    public void TradeContract.setSupplierTel(String supplierTel) {
+        this.supplierTel = supplierTel;
+    }
+    
+    public String TradeContract.getSupplierFax() {
+        return this.supplierFax;
+    }
+    
+    public void TradeContract.setSupplierFax(String supplierFax) {
+        this.supplierFax = supplierFax;
+    }
+    
+    public String TradeContract.getSupplierLegalPerson() {
+        return this.supplierLegalPerson;
+    }
+    
+    public void TradeContract.setSupplierLegalPerson(String supplierLegalPerson) {
+        this.supplierLegalPerson = supplierLegalPerson;
+    }
+    
+    public String TradeContract.getCustomerAddress() {
+        return this.customerAddress;
+    }
+    
+    public void TradeContract.setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+    
+    public String TradeContract.getCustomerTel() {
+        return this.customerTel;
+    }
+    
+    public void TradeContract.setCustomerTel(String customerTel) {
+        this.customerTel = customerTel;
+    }
+    
+    public String TradeContract.getCustomerFax() {
+        return this.customerFax;
+    }
+    
+    public void TradeContract.setCustomerFax(String customerFax) {
+        this.customerFax = customerFax;
+    }
+    
+    public String TradeContract.getCustomerLegalPerson() {
+        return this.customerLegalPerson;
+    }
+    
+    public void TradeContract.setCustomerLegalPerson(String customerLegalPerson) {
+        this.customerLegalPerson = customerLegalPerson;
+    }
+    
+    public String TradeContract.getCompanyAddress() {
+        return this.companyAddress;
+    }
+    
+    public void TradeContract.setCompanyAddress(String companyAddress) {
+        this.companyAddress = companyAddress;
+    }
+    
+    public String TradeContract.getCompanyLegalPerson() {
+        return this.companyLegalPerson;
+    }
+    
+    public void TradeContract.setCompanyLegalPerson(String companyLegalPerson) {
+        this.companyLegalPerson = companyLegalPerson;
+    }
+    
+    public String TradeContract.getMarkTxt() {
+        return this.markTxt;
+    }
+    
+    public void TradeContract.setMarkTxt(String markTxt) {
+        this.markTxt = markTxt;
     }
     
     public byte[] TradeContract.getDoc() {

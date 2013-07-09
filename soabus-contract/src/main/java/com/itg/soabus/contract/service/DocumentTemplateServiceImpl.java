@@ -83,8 +83,6 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	@Resource(name = "wsContext")
 	private WebServiceContext wsCtxt;
 
-
-	
 	private void fillTcField(TradeContract tc) {
 		tc.setTtlSalesAmount(0.0d);
 		tc.setTtlPurchaseAmount(0.0d);
@@ -114,8 +112,8 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	}
 
 	public Result generateDocument(String userName, String password,
-			TradeContract tradeContract, String templateName)
-			throws SerialException, SQLException {
+			TradeContract tradeContract, String salesTemplateName,
+			String purchaseTemplateName) throws SerialException, SQLException {
 		Result result = new Result();
 		boolean b = checkAuthByLdap(userName, password);
 		if (!b) {
@@ -124,7 +122,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			return result;
 		}
 		TradeContractWorkflow flow = new TradeContractWorkflow();
-		flow.setTemplateName(templateName);
+		flow.setTemplateName(salesTemplateName);
 		flow.setTradeContract(tradeContract);
 		flow.setUserName(userName);
 

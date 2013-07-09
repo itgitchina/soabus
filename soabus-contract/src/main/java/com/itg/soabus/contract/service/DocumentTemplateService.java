@@ -26,8 +26,8 @@ public interface DocumentTemplateService {
 
 	@WebMethod(operationName = "generateDocument")
 	public Result generateDocument(String userName, String password,
-			TradeContract tradeContract, String templateName)
-			throws SerialException, SQLException;
+			TradeContract tradeContract, String salesTemplateName,
+			String purchaseTemplateName) throws SerialException, SQLException;
 
 	public void processMessage(TradeContractWorkflow flow);
 }

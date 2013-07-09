@@ -22,6 +22,7 @@ public class TradeContract implements Serializable {
 	private String contractNo;
 	private String externalNo;
 	private String company;
+	private String companyEn; // KNA1-name3+name4
 	private String supplier;
 	private String customer;
 
@@ -36,13 +37,35 @@ public class TradeContract implements Serializable {
 	private Double ttlQuantity;
 	private String salesAmtInWords;
 	private String purchaseAmtInWords;
+	private String purchaseAmtInEnWords;
 	private Double ttlSalesAmount;
 	private Double ttlPurchaseAmount;
 
 	private String purchaseCurrency;
+
 	private String salesCurrency;
 
+	private String pruchaseTradingTerms;
+	private String salesTradingTerms;
+
+	
 	private String oaResponse;
+
+	private String supplierAddress;
+	private String supplierTel;
+	private String supplierFax;
+	private String supplierLegalPerson;
+
+	private String customerAddress;
+	private String customerTel;
+	private String customerFax;
+	private String customerLegalPerson;
+
+	private String companyAddress;
+	private String companyLegalPerson;
+
+	private String markTxt;
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private byte[] doc;
