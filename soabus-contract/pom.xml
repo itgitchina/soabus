@@ -6,7 +6,7 @@
 	<artifactId>soabus-contract</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SoaBus</name>
+	<name>soabus</name>
 	<url>http://www.springframework.org/spring-ws</url>
 
 
@@ -23,13 +23,14 @@
 				<cargo.remote.password>maven0512</cargo.remote.password>
 				<cargo.tomcat.manager.url>http://172.16.123.77:8080/manager/text</cargo.tomcat.manager.url>
 
+                <oa.server.address>172.16.10.111:7089</oa.server.address>
 
 
 			</properties>
 		</profile>
 
 		<profile>
-			<id>prd</id>
+			<id>qas</id>
 			<properties>
 				<db.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver>
 				<db.url>jdbc:sqlserver://172.16.10.70;databaseName=soabus</db.url>
@@ -39,8 +40,7 @@
 				<cargo.remote.username>admin</cargo.remote.username>
 				<cargo.remote.password>maven0512</cargo.remote.password>
 				<cargo.tomcat.manager.url>http://172.16.10.54:8080/manager/text</cargo.tomcat.manager.url>
-
-
+				<oa.server.address>172.16.10.111:7089</oa.server.address>	
 
 			</properties>
 		</profile>
@@ -232,7 +232,7 @@
 								<artifactId>soabus-contract</artifactId>
 								<type>war</type>
 								<properties>
-									<context>soabus</context>
+									<context>/${project.name}</context>
 								</properties>
 							</deployable>
 						</deployables>

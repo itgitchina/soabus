@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.itg.soabus.contract.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.contract.domain.TradeContractItem;
+import com.itg.soabus.contract.service.DocumentTemplateServiceImpl;
 
 @ContextConfiguration(locations = {
 		"/META-INF/spring/applicationContext-jms.xml",

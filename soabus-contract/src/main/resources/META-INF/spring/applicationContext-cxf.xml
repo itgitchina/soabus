@@ -9,7 +9,8 @@
 
 
 
-	<bean id="documentTemplateService" class="com.itg.soabus.contract.DocumentTemplateServiceImpl" />
+	<bean id="documentTemplateService"
+		class="com.itg.soabus.contract.service.DocumentTemplateServiceImpl" />
 	<jaxws:endpoint id="documentTemplateEndpoint"
 		implementor="#documentTemplateService" address="/documentTemplateService" />
 

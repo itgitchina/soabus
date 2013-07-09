@@ -1,4 +1,4 @@
-package com.itg.soabus.contract;
+package com.itg.soabus.contract.service;
 
 import java.io.IOException;
 import java.sql.SQLException;

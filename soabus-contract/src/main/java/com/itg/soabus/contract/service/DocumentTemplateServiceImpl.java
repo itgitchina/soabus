@@ -1,4 +1,4 @@
-package com.itg.soabus.contract;
+package com.itg.soabus.contract.service;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -32,6 +32,8 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -66,7 +68,6 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
-@Controller
 @Service
 public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
@@ -82,40 +83,8 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	@Resource(name = "wsContext")
 	private WebServiceContext wsCtxt;
 
-	@RequestMapping("/downloadcontracttxt.doc")
-	public @ResponseBody
-	ResponseEntity<byte[]> downloadContractTxt(
-			@RequestParam(value = "contractno", required = true) String contractNo,
-			HttpServletResponse response) throws IOException {
 
-		response.setContentType("application/x-msword");
-
-		List<TradeContract> tcs = TradeContract
-				.findTradeContractsByContractNoEquals(contractNo)
-				.getResultList();
-
-		HttpHeaders headers = new HttpHeaders();
-		if (tcs.size() == 0) {
-
-			headers.add("Content-Type", "text/html; charset=utf-8");
-			return new ResponseEntity<byte[]>(null, headers,
-					HttpStatus.NOT_FOUND);
-
-		}
-
-		TradeContract tc = tcs.get(0);
-
-		InputStream is = new ByteArrayInputStream(tc.getDoc());
-
-		headers.setContentLength(tc.getDoc().length);
-
-		headers.add("Content-Disposition",
-				"attachment; filename=\"" + tc.getContractNo() + ".doc\"");
-
-		return new ResponseEntity<byte[]>(tc.getDoc(), headers, HttpStatus.OK);
-
-	}
-
+	
 	private void fillTcField(TradeContract tc) {
 		tc.setTtlSalesAmount(0.0d);
 		tc.setTtlPurchaseAmount(0.0d);
@@ -306,7 +275,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 		properties.getProperty().add(
 				makeProperty("appfj", "http://" + documentServerAddress
-						+ "/soabus/downloadcontracttxt.doc?contractno="
+						+ "/soabus/contract/downloadtxt?contractno="
 						+ tradeContract.getContractNo(), "http:"
 						+ tradeContract.getContractNo() + ".doc"));
 
