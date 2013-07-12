@@ -8,12 +8,20 @@ import com.itg.soabus.messaging.TradeContractWorkflow;
 
 privileged aspect TradeContractWorkflow_Roo_JavaBean {
     
-    public String TradeContractWorkflow.getTemplateName() {
-        return this.templateName;
+    public String TradeContractWorkflow.getSalesTemplateName() {
+        return this.salesTemplateName;
     }
     
-    public void TradeContractWorkflow.setTemplateName(String templateName) {
-        this.templateName = templateName;
+    public void TradeContractWorkflow.setSalesTemplateName(String salesTemplateName) {
+        this.salesTemplateName = salesTemplateName;
+    }
+    
+    public String TradeContractWorkflow.getPurchaseTemplateName() {
+        return this.purchaseTemplateName;
+    }
+    
+    public void TradeContractWorkflow.setPurchaseTemplateName(String purchaseTemplateName) {
+        this.purchaseTemplateName = purchaseTemplateName;
     }
     
     public TradeContract TradeContractWorkflow.getTradeContract() {

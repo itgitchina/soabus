@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -55,7 +56,8 @@ public class TradeContractWorkflowTopicListener {
 	@Autowired
 	private DocumentTemplateService documentTemplateService;
 
-	public void onMessage(Object message) {
+	public void onMessage(Object message) throws IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException {
 		// System.out.println("JMS message received: " + message);
 		logger.info(message.toString());
 

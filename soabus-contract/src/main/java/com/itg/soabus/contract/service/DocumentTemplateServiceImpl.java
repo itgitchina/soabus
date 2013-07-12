@@ -8,8 +8,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -20,6 +22,8 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +33,7 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
 import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +60,7 @@ import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 
 import com.itg.soabus.contract.common.AmtInChsWords;
+import com.itg.soabus.contract.common.AmtInEngWords.DefaultProcessor;
 import com.itg.soabus.contract.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.contract.domain.TradeContractItem;
@@ -109,6 +115,9 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		tc.setSalesAmtInWords(AmtInChsWords.convertMoney(tc.getTtlSalesAmount()));
 		tc.setPurchaseAmtInWords(AmtInChsWords.convertMoney(tc
 				.getTtlPurchaseAmount()));
+		DefaultProcessor processor = new DefaultProcessor();
+
+		tc.setPurchaseAmtInEnWords(processor.getName(tc.getTtlPurchaseAmount()));
 	}
 
 	public Result generateDocument(String userName, String password,
@@ -117,16 +126,32 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		Result result = new Result();
 		boolean b = checkAuthByLdap(userName, password);
 		if (!b) {
-			result.setMsg("user auth failed");
-			result.setResult(1);
+			result.setMsg("\u7528\u6237\u540D\u5BC6\u7801\u9519\u8BEF"); // user
+																			// auth
+																			// failed
+			result.setResult(-1);
 			return result;
 		}
+
+		if (checkWorkflowExists(tradeContract.getContractNo())) {
+
+			result.setMsg("\u4E0D\u80FD\u91CD\u590D\u542F\u52A8\u5408\u540C\u5BA1\u6279\u6D41\u7A0B\uFF0C\u8BF7\u5148\u5220\u9664\u4E4B\u524D\u7684\u6D41\u7A0B\u3002");
+
+			// Workflow has been started!
+			result.setResult(-2);
+			return result;
+		}
+
 		TradeContractWorkflow flow = new TradeContractWorkflow();
-		flow.setTemplateName(salesTemplateName);
+		flow.setSalesTemplateName(salesTemplateName);
+		flow.setPurchaseTemplateName(purchaseTemplateName);
 		flow.setTradeContract(tradeContract);
 		flow.setUserName(userName);
 
-		MessageContext msgCtxt = wsCtxt.getMessageContext();
+		MessageContext msgCtxt = null;
+		if (wsCtxt != null) {
+			msgCtxt = wsCtxt.getMessageContext();
+		}
 		if (msgCtxt != null) {
 			HttpServletRequest req = (HttpServletRequest) msgCtxt
 					.get(MessageContext.SERVLET_REQUEST);
@@ -143,6 +168,38 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		result.setResult(0);
 		result.setMsg("Document has been send to Queue. Please Wait...");
 		return result;
+	}
+
+	private boolean checkWorkflowExists(String contractNo) {
+
+		TradeContract tc = getTradeContractByNo(contractNo);
+
+		if (tc == null) {
+			return false;
+		}
+		Integer requestId = 0;
+		try {
+			requestId = Integer.parseInt(tc.getOaResponse());
+		} catch (NumberFormatException e) {
+
+			return false;
+		}
+
+		if (requestId < 0) {
+			return false;
+		}
+
+		RequestService service = new RequestService();
+		RequestServicePortType port = service.getRequestServiceHttpPort();
+
+		RequestInfo requestInfo = port.getRequest(requestId);
+
+		if (requestInfo != null) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	private Boolean checkAuthByLdap(String username, String password) {
@@ -175,46 +232,77 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		jmsOperations.convertAndSend(messageObject);
 	}
 
-	public void processMessage(TradeContractWorkflow flow) {
+	public byte[] makeDocFile(TradeContract tradeContract, String templateName)
+			throws IOException, XDocReportException {
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+		InputStream in = this.getClass().getResourceAsStream(
+				"/template/" + templateName + ".docx");
+		IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,
+				TemplateEngineKind.Velocity);
+		IContext context = report.createContext();
+
+		context.put("tradeContract", tradeContract);
+		context.put("date", new DateTool());
+		DateTool date = new DateTool();
+
+		logger.debug("yyyy-MM-dd", new Date());
+
+		//context.put("numberTool", new NumberTool());
+		// OutputStream outdisk = new FileOutputStream(new File("处理过的合同-"
+		// + templateName + ".docx"));
+
+		report.process(context, out);
+
+		// out.writeTo(outdisk);
+		return out.toByteArray();
+
+	}
+
+	public TradeContract getTradeContractByNo(String contractNo) {
+
+		TradeContract tradeContract = null;
+
+		try {
+			tradeContract = TradeContract.findTradeContractsByContractNoEquals(
+					contractNo).getSingleResult();
+		} catch (Exception e) {
+
+		}
+		return tradeContract;
+	}
+
+	public void processMessage(TradeContractWorkflow flow)
+			throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException {
 
 		TradeContract tradeContract = flow.getTradeContract();
-		String templateName = flow.getTemplateName();
+		String salesTemplateName = flow.getSalesTemplateName();
+		String purchaseTemplateName = flow.getPurchaseTemplateName();
 
 		Result result = new Result();
 
-		try {
-			InputStream in = this.getClass().getResourceAsStream(
-					"/template/" + templateName + ".docx");
-			IXDocReport report = XDocReportRegistry.getRegistry().loadReport(
-					in, TemplateEngineKind.Velocity);
-			IContext context = report.createContext();
-			fillTcField(tradeContract);
-			context.put("tradeContract", tradeContract);
-			context.put("date", new DateTool());
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			OutputStream outdisk = new FileOutputStream(new File("处理过的合同.docx"));
-			report.process(context, out);
-			outdisk.write(out.toByteArray());
-			List<TradeContract> tcs = TradeContract
-					.findTradeContractsByContractNoEquals(
-							tradeContract.getContractNo()).getResultList();
-			TradeContract tcToSave;
-			if (tcs.size() > 0) {
-				tcToSave = tcs.get(0);
-			} else {
-				tcToSave = new TradeContract();
-			}
-			tradeContract.copyTo(tcToSave);
-			tcToSave.setDoc(out.toByteArray());
+		List<TradeContract> tcs = TradeContract
+				.findTradeContractsByContractNoEquals(
+						tradeContract.getContractNo()).getResultList();
+		TradeContract tcToSave;
+		if (tcs.size() > 0) {
+			tcToSave = tcs.get(0);
+		} else {
+			tcToSave = new TradeContract();
+		}
+		tradeContract.copyTo(tcToSave);
 
-			result.setResult(1);
-			result.setMsg("success!");
+		fillTcField(tcToSave);
+		result.setResult(1);
+		result.setMsg("success!");
+		try {
+			tcToSave.setSalesDoc(makeDocFile(tcToSave, salesTemplateName));
+			tcToSave.setPurchaseDoc(makeDocFile(tcToSave, purchaseTemplateName));
 
 			startContractAduitWorkflow(flow.getUserName(), tcToSave,
 					flow.getDocumentServerAddress());
-			tcToSave.merge();
-			logger.info("start workfolow for contract "
-					+ tradeContract.getContractNo());
 		} catch (IOException e) {
 			e.printStackTrace();
 			result.setResult(0);
@@ -226,6 +314,10 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			result.setMsg(e.getMessage());
 			logger.error(e.getMessage());
 		}
+
+		tcToSave.merge();
+		logger.info("start workfolow for contract "
+				+ tradeContract.getContractNo());
 
 	}
 
@@ -248,9 +340,6 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 		ArrayOfProperty properties = objFactory.createArrayOfProperty();
 
-		// properties.getProperty().add(makeProperty("syr", creatorid));
-		// properties.getProperty().add(makeProperty("appMan", creatorid));
-
 		properties.getProperty().add(makeProperty("sqrzjbr", creatorid));
 		properties.getProperty().add(
 				makeProperty("ztc", tradeContract.getExternalNo()));
@@ -260,25 +349,41 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 				makeProperty("zje", tradeContract.getTtlPurchaseAmount()
 						.toString()));
 
-		String bb = port.getPropValue("BB", "USD");
-		logger.debug(bb);
-		properties.getProperty().add(makeProperty("BB", "2"));
+		properties.getProperty().add(
+				makeProperty("BB",
+						getOACurrencyId(tradeContract.getPurchaseCurrency())));
 
 		properties.getProperty().add(makeProperty("hqfs", creatorid));
 		properties.getProperty().add(
 				makeProperty("title", tradeContract.getExternalNo()));
 
-		properties.getProperty().add(makeProperty("dept", "12"));
-		properties.getProperty().add(makeProperty("corp", "1"));
+		properties.getProperty().add(
+				makeProperty("dept", getOAUserDept(userName).toString()));
+		properties.getProperty().add(
+				makeProperty("corp", getOAUserCorp(userName).toString()));
+
+		properties
+				.getProperty()
+				.add(makeProperty(
+						"appfj",
+						"http://"
+								+ documentServerAddress
+								+ "/soabus/contract/downloadtxt?type=purchase&contractno="
+								+ tradeContract.getContractNo(), "http:"
+								+ tradeContract.getContractNo()
+								+ "-\u91C7\u8D2D.doc"));
 
 		properties.getProperty().add(
 				makeProperty("appfj", "http://" + documentServerAddress
-						+ "/soabus/contract/downloadtxt?contractno="
+						+ "/soabus/contract/downloadtxt?type=sales&contractno="
 						+ tradeContract.getContractNo(), "http:"
-						+ tradeContract.getContractNo() + ".doc"));
+						+ tradeContract.getContractNo() + "-\u9500\u552E.doc"));
 
-		properties.getProperty().add(makeProperty("ptxz", "0"));
-		// properties.getProperty().add(makeProperty("content", "1000"));
+		properties
+				.getProperty()
+				.add(makeProperty(
+						"ptxz",
+						getOADomainValue("7869", tradeContract.getCompanyCode())));
 
 		mainTable.setProperty(objFactory
 				.createMainTableInfoProperty(properties));
@@ -332,6 +437,127 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 						Integer loginId = -1;
 						if (rs.next()) {
 							loginId = rs.getInt(1);
+						}
+						return loginId;
+					}
+
+				});
+
+		if (loginId == -1) {
+			logger.error("Can't find user " + userName
+					+ "'s OA login id, start workflow fail!!");
+		}
+		return loginId;
+
+	}
+
+	private Integer getOAUserDept(String userName) {
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		if (userName.contains("@itg.net")) {
+			userName = userName.replace("@itg.net", "");
+		}
+		paramMap.put("loginid", userName);
+
+		Integer loginId = jdbcTemplate.query(
+				"select id, dept from hrmresource where loginid=:loginid",
+				paramMap, new ResultSetExtractor<Integer>() {
+
+					@Override
+					public Integer extractData(ResultSet rs)
+							throws SQLException, DataAccessException {
+
+						Integer loginId = -1;
+						if (rs.next()) {
+							loginId = rs.getInt(2);
+						}
+						return loginId;
+					}
+
+				});
+
+		if (loginId == -1) {
+			logger.error("Can't find user " + userName
+					+ "'s OA login id, start workflow fail!!");
+		}
+		return loginId;
+
+	}
+
+	private String getOACurrencyId(String currency) {
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		if (currency.equals("CNY")) {
+			currency = "RMB";
+		}
+		paramMap.put("currencyname", currency);
+		Integer id = jdbcTemplate.query(
+				"select  id from fnaCurrency where currencyname=:currencyname",
+				paramMap, new ResultSetExtractor<Integer>() {
+
+					@Override
+					public Integer extractData(ResultSet rs)
+							throws SQLException, DataAccessException {
+
+						Integer id = -1;
+						if (rs.next()) {
+							id = rs.getInt(1);
+						}
+						return id;
+					}
+
+				});
+
+		return id.toString();
+
+	}
+
+	private String getOADomainValue(String fieldId, String selectName) {
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+
+		paramMap.put("fieldid", fieldId);
+		paramMap.put("selectname", selectName);
+		Integer id = jdbcTemplate
+				.query("select selectvalue from workflow_selectitem where fieldid=:fieldid and selectname=:selectname",
+						paramMap, new ResultSetExtractor<Integer>() {
+
+							@Override
+							public Integer extractData(ResultSet rs)
+									throws SQLException, DataAccessException {
+
+								Integer loginId = -1;
+								if (rs.next()) {
+									loginId = rs.getInt(1);
+								}
+								return loginId;
+							}
+
+						});
+
+		return id.toString();
+
+	}
+
+	private Integer getOAUserCorp(String userName) {
+
+		Map<String, String> paramMap = new HashMap<String, String>();
+		if (userName.contains("@itg.net")) {
+			userName = userName.replace("@itg.net", "");
+		}
+		paramMap.put("loginid", userName);
+
+		Integer loginId = jdbcTemplate.query(
+				"select id, corp from hrmresource where loginid=:loginid",
+				paramMap, new ResultSetExtractor<Integer>() {
+
+					@Override
+					public Integer extractData(ResultSet rs)
+							throws SQLException, DataAccessException {
+
+						Integer loginId = -1;
+						if (rs.next()) {
+							loginId = rs.getInt(2);
 						}
 						return loginId;
 					}

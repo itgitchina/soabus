@@ -34,6 +34,14 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.company = company;
     }
     
+    public String TradeContract.getCompanyCode() {
+        return this.companyCode;
+    }
+    
+    public void TradeContract.setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+    
     public String TradeContract.getCompanyEn() {
         return this.companyEn;
     }
@@ -266,12 +274,20 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.markTxt = markTxt;
     }
     
-    public byte[] TradeContract.getDoc() {
-        return this.doc;
+    public byte[] TradeContract.getSalesDoc() {
+        return this.salesDoc;
     }
     
-    public void TradeContract.setDoc(byte[] doc) {
-        this.doc = doc;
+    public void TradeContract.setSalesDoc(byte[] salesDoc) {
+        this.salesDoc = salesDoc;
+    }
+    
+    public byte[] TradeContract.getPurchaseDoc() {
+        return this.purchaseDoc;
+    }
+    
+    public void TradeContract.setPurchaseDoc(byte[] purchaseDoc) {
+        this.purchaseDoc = purchaseDoc;
     }
     
 }

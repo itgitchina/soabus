@@ -31,6 +31,7 @@ public class TradeContractController {
 	public @ResponseBody
 	ResponseEntity<byte[]> downloadContractTxt(
 			@RequestParam(value = "contractno", required = true) String contractNo,
+			@RequestParam(value = "type", required = true) String type,
 			HttpServletResponse response) throws IOException {
 
 		response.setContentType("application/x-msword");
@@ -50,14 +51,23 @@ public class TradeContractController {
 
 		TradeContract tc = tcs.get(0);
 
-		InputStream is = new ByteArrayInputStream(tc.getDoc());
+		byte[] doc;
 
-		headers.setContentLength(tc.getDoc().length);
+		if (type.equals("sales")) {
+			doc = tc.getSalesDoc();
+		} else {
+			doc = tc.getPurchaseDoc();
+		}
+
+		InputStream is = new ByteArrayInputStream(doc);
+
+		headers.setContentLength(doc.length);
 
 		headers.add("Content-Disposition",
-				"attachment; filename=\"" + tc.getContractNo() + ".doc\"");
+				"attachment; filename=\"" + tc.getContractNo() + "-" + type
+						+ ".doc\"");
 
-		return new ResponseEntity<byte[]>(tc.getDoc(), headers, HttpStatus.OK);
+		return new ResponseEntity<byte[]>(doc, headers, HttpStatus.OK);
 
 	}
 
@@ -87,16 +97,16 @@ public class TradeContractController {
 
 		String redirectTo = "http://"
 				+ oaServerAddress
-				+ "/workflow/request/ManageRequestNoForm.jsp?fromFlowDoc=&requestid="
-				+ tc.getOaResponse()
-				+ "&isrequest=0&isovertime=0&isaffirmance=&reEdit=1&seeflowdoc=0&isworkflowdoc=0&isfromtab=false";
+				+ "/login/Login.jsp?gopage=/workflow/request/ViewRequest.jsp?requestid="
+				+ tc.getOaResponse();
 
 		headers.add("Location", redirectTo);
-		return new ResponseEntity<String>(redirectTo, headers,
-				HttpStatus.MOVED_PERMANENTLY);
+		headers.setExpires(-1);
+		headers.setCacheControl("no-cache");
+		headers.setPragma("no-cache");
+		return new ResponseEntity<String>(redirectTo, headers, HttpStatus.FOUND);
 
 		// return "redirect:http://yahoo.com"
 
 	}
-
 }

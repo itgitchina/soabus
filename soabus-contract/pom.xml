@@ -642,6 +642,11 @@
 			<artifactId>activemq-all</artifactId>
 			<version>5.8.0</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<aspectj.version>1.7.0</aspectj.version>

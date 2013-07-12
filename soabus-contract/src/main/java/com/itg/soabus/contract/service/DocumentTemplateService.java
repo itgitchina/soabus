@@ -1,6 +1,7 @@
 package com.itg.soabus.contract.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
 import com.itg.soabus.contract.common.Result;
@@ -29,5 +30,10 @@ public interface DocumentTemplateService {
 			TradeContract tradeContract, String salesTemplateName,
 			String purchaseTemplateName) throws SerialException, SQLException;
 
-	public void processMessage(TradeContractWorkflow flow);
+	public void processMessage(TradeContractWorkflow flow)
+			throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException;
+
+	public Integer startContractAduitWorkflow(String userName,
+			TradeContract tradeContract, String documentServerAddress);
 }

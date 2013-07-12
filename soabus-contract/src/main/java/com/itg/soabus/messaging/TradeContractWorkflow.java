@@ -9,9 +9,11 @@ import com.itg.soabus.contract.domain.TradeContract;
 @RooJavaBean
 public class TradeContractWorkflow implements Serializable {
 
-	private String templateName;
+	private String salesTemplateName;
+	private String purchaseTemplateName;
 	private TradeContract tradeContract;
 	private String userName;
 	private String documentServerAddress;
+	
 
 }
