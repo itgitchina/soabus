@@ -249,7 +249,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 		logger.debug("yyyy-MM-dd", new Date());
 
-		//context.put("numberTool", new NumberTool());
+		context.put("numberTool", new NumberTool());
 		// OutputStream outdisk = new FileOutputStream(new File("处理过的合同-"
 		// + templateName + ".docx"));
 
@@ -301,8 +301,6 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			tcToSave.setSalesDoc(makeDocFile(tcToSave, salesTemplateName));
 			tcToSave.setPurchaseDoc(makeDocFile(tcToSave, purchaseTemplateName));
 
-			startContractAduitWorkflow(flow.getUserName(), tcToSave,
-					flow.getDocumentServerAddress());
 		} catch (IOException e) {
 			e.printStackTrace();
 			result.setResult(0);
@@ -315,7 +313,13 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			logger.error(e.getMessage());
 		}
 
+		tcToSave = tcToSave.merge();
+
+		startContractAduitWorkflow(flow.getUserName(), tcToSave,
+				flow.getDocumentServerAddress());
+
 		tcToSave.merge();
+
 		logger.info("start workfolow for contract "
 				+ tradeContract.getContractNo());
 
@@ -371,13 +375,14 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 								+ "/soabus/contract/downloadtxt?type=purchase&contractno="
 								+ tradeContract.getContractNo(), "http:"
 								+ tradeContract.getContractNo()
-								+ "-\u91C7\u8D2D.doc"));
+								+ "-\u91C7\u8D2D.docx"));
 
-		properties.getProperty().add(
-				makeProperty("appfj", "http://" + documentServerAddress
+		properties
+				.getProperty()
+				.add(makeProperty("appfj", "http://" + documentServerAddress
 						+ "/soabus/contract/downloadtxt?type=sales&contractno="
 						+ tradeContract.getContractNo(), "http:"
-						+ tradeContract.getContractNo() + "-\u9500\u552E.doc"));
+						+ tradeContract.getContractNo() + "-\u9500\u552E.docx"));
 
 		properties
 				.getProperty()

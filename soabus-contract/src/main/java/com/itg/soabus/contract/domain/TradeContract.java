@@ -17,10 +17,12 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.beanutils.converters.DateConverter;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
+
+import com.itg.soabus.contract.common.DateConverter;
 
 @RooJavaBean
 @RooJpaActiveRecord(finders = { "findTradeContractsByContractNoEquals" })
@@ -90,7 +92,7 @@ public class TradeContract implements Serializable {
 				.getPropertyDescriptors(dest);
 
 		java.util.Date defaultValue = null;
-		Converter converter = new DateConverter(defaultValue);
+		Converter converter = new DateConverter();
 		BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
 		beanUtilsBean.getConvertUtils().register(converter,
 				java.util.Date.class);
@@ -103,9 +105,9 @@ public class TradeContract implements Serializable {
 						BeanUtils.getProperty(this, p.getName()));
 			}
 		}
-		dest.setSignDate(getSignDate());
-		dest.setPurchaseLastDelivery(getPurchaseLastDelivery());
-		dest.setSalesLastDelivery(getSalesLastDelivery());
+		//dest.setSignDate(getSignDate());
+		//dest.setPurchaseLastDelivery(getPurchaseLastDelivery());
+		//dest.setSalesLastDelivery(getSalesLastDelivery());
 
 		dest.setItems(getItems());
 

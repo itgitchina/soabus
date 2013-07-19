@@ -36,7 +36,7 @@ public class DocumentTemplateServiceImplTest {
 	final Logger logger = LoggerFactory
 			.getLogger(DocumentTemplateServiceImplTest.class);
 
-	//@Test
+	// @Test
 	public void testStartContractAduitWorkflow() {
 		TradeContract tradeContract = TradeContract
 				.findTradeContractsByContractNoEquals("contract_no")
@@ -50,6 +50,10 @@ public class DocumentTemplateServiceImplTest {
 		TradeContract tradeContract = TradeContract
 				.findTradeContractsByContractNoEquals("contract_no")
 				.getSingleResult();
+
+		tradeContract.setSignDate(new Date());
+		tradeContract.setPurchaseLastDelivery(new Date());
+		tradeContract.setSalesLastDelivery(new Date());
 
 		TradeContractWorkflow flow = new TradeContractWorkflow();
 		flow.setDocumentServerAddress("172.16.10.54:8080");
@@ -72,7 +76,7 @@ public class DocumentTemplateServiceImplTest {
 
 	}
 
-	@Test
+	// @Test
 	public void testCheckAuthByLdap() throws NoSuchMethodException,
 			SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
