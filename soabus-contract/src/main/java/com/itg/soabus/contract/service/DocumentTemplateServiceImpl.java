@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
@@ -73,6 +74,7 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 
 @Service
 public class DocumentTemplateServiceImpl implements DocumentTemplateService {
@@ -142,6 +144,15 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			return result;
 		}
 
+		List<TradeContract> tcs = TradeContract
+				.findTradeContractsByContractNoEquals(
+						tradeContract.getContractNo()).getResultList();
+		if (tcs.size() > 0) {
+			TradeContract tcToSave = tcs.get(0);
+			tcToSave.setOaResponse(null);
+			tcToSave.merge();
+
+		}
 		TradeContractWorkflow flow = new TradeContractWorkflow();
 		flow.setSalesTemplateName(salesTemplateName);
 		flow.setPurchaseTemplateName(purchaseTemplateName);
@@ -239,13 +250,17 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 		InputStream in = this.getClass().getResourceAsStream(
 				"/template/" + templateName + ".docx");
+		//InputStreamReader in2 = new InputStreamReader(in, "UTF-8");
+
 		IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,
 				TemplateEngineKind.Velocity);
+
+		
 		IContext context = report.createContext();
 
 		context.put("tradeContract", tradeContract);
 		context.put("date", new DateTool());
-		DateTool date = new DateTool();
+		// DateTool date = new DateTool();
 
 		logger.debug("yyyy-MM-dd", new Date());
 

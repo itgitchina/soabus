@@ -94,16 +94,26 @@ public class TradeContractController {
 		if (tcs.size() == 0) {
 
 			modelAndView = new ModelAndView("contractNoFound");
-
+			modelAndView.addObject("errorMessage", "合同不存在！");
+			modelAndView.addObject("errorNo", "-1");
 			return modelAndView;
 		}
 
 		tc = tcs.get(0);
 
-		if (tc.getOaResponse() == null
-				|| Integer.parseInt(tc.getOaResponse()) < 0) {
+		if (tc.getOaResponse() == null) {
 			modelAndView = new ModelAndView("contractNoFound");
+			modelAndView.addObject("errorMessage", "合同审批流程正在发起中...请稍候。 ");
+			modelAndView.addObject("errorNo", "-2");
+			return modelAndView;
 
+		}
+		
+		
+		if( Integer.parseInt(tc.getOaResponse()) < 0){
+			modelAndView = new ModelAndView("contractNoFound");
+			modelAndView.addObject("errorMessage", "合同审批流程发起错误，请联系系统管理员。 ");
+			modelAndView.addObject("errorNo", "-3");
 			return modelAndView;
 
 		}
@@ -119,6 +129,7 @@ public class TradeContractController {
 				+ tc.getOaResponse();
 
 		modelAndView.addObject("oaLink", redirectTo);
+		modelAndView.addObject("errorNo", "0");
 		return modelAndView;
 
 	}
