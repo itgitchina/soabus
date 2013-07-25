@@ -37,6 +37,8 @@ public class TradeContract implements Serializable {
 	private String supplier;
 	private String customer;
 
+	private String purchaseGroup;
+
 	private Date signDate;
 
 	private Date salesLastDelivery;
@@ -76,6 +78,8 @@ public class TradeContract implements Serializable {
 
 	private String markTxt;
 
+	private String unit;
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private byte[] salesDoc;
@@ -105,9 +109,9 @@ public class TradeContract implements Serializable {
 						BeanUtils.getProperty(this, p.getName()));
 			}
 		}
-		//dest.setSignDate(getSignDate());
-		//dest.setPurchaseLastDelivery(getPurchaseLastDelivery());
-		//dest.setSalesLastDelivery(getSalesLastDelivery());
+		// dest.setSignDate(getSignDate());
+		// dest.setPurchaseLastDelivery(getPurchaseLastDelivery());
+		// dest.setSalesLastDelivery(getSalesLastDelivery());
 
 		dest.setItems(getItems());
 

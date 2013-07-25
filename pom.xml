@@ -26,5 +26,6 @@
   	
   	<module>soabus-contract</module>
   	<module>soabus-oaservice</module>
+  	<module>soabus-logistic</module>
   </modules>
 </project>

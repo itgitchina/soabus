@@ -12,11 +12,13 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
@@ -110,6 +112,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			}
 
 			tc.setTtlQuantity(tc.getTtlQuantity() + item.getQuantity());
+			tc.setUnit(item.getUnit());
 			tc.setTtlSalesAmount(tc.getTtlSalesAmount() + item.getSalesAmount());
 			tc.setTtlPurchaseAmount(tc.getTtlPurchaseAmount()
 					+ item.getPurchaseAmount());
@@ -250,16 +253,17 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 		InputStream in = this.getClass().getResourceAsStream(
 				"/template/" + templateName + ".docx");
-		//InputStreamReader in2 = new InputStreamReader(in, "UTF-8");
+		// InputStreamReader in2 = new InputStreamReader(in, "UTF-8");
 
 		IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in,
 				TemplateEngineKind.Velocity);
 
-		
 		IContext context = report.createContext();
 
 		context.put("tradeContract", tradeContract);
 		context.put("date", new DateTool());
+
+		context.put("englishLocale", java.util.Locale.ENGLISH);
 		// DateTool date = new DateTool();
 
 		logger.debug("yyyy-MM-dd", new Date());
@@ -350,8 +354,13 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
 		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("383"));
 
+		DecimalFormat df = new DecimalFormat("#,##0.00");
+
 		in0.setDescription(objFactory
-				.createRequestInfoDescription(tradeContract.getExternalNo()));
+				.createRequestInfoDescription(tradeContract.getCompanyCode()
+						+ " " + tradeContract.getPurchaseGroup() + " "
+						+ df.format(tradeContract.getTtlQuantity())
+						+ tradeContract.getUnit()));
 		in0.setRequestlevel(objFactory.createRequestInfoRequestlevel("0"));// 紧急程度
 		in0.setRemindtype(objFactory.createRequestInfoRemindtype("0"));// 提醒类型
 

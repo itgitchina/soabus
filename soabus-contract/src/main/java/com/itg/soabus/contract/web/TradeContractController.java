@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.itg.soabus.contract.domain.TradeContract;
 
 @Controller
-@RequestMapping("/contract")
 public class TradeContractController {
 
 	@Value("${oa_server_address}")
@@ -108,9 +107,8 @@ public class TradeContractController {
 			return modelAndView;
 
 		}
-		
-		
-		if( Integer.parseInt(tc.getOaResponse()) < 0){
+
+		if (Integer.parseInt(tc.getOaResponse()) < 0) {
 			modelAndView = new ModelAndView("contractNoFound");
 			modelAndView.addObject("errorMessage", "合同审批流程发起错误，请联系系统管理员。 ");
 			modelAndView.addObject("errorNo", "-3");

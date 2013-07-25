@@ -25,8 +25,8 @@ import com.itg.soabus.contract.service.DocumentTemplateServiceImpl;
 import com.itg.soabus.messaging.TradeContractWorkflow;
 
 @ContextConfiguration(locations = {
-		"/META-INF/spring/applicationContext-jms.xml",
-		"/META-INF/spring/applicationContext.xml" })
+// "/META-INF/spring/applicationContext-jms.xml",
+"/META-INF/spring/applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentTemplateServiceImplTest {
 
@@ -58,13 +58,13 @@ public class DocumentTemplateServiceImplTest {
 		TradeContractWorkflow flow = new TradeContractWorkflow();
 		flow.setDocumentServerAddress("172.16.10.54:8080");
 
-		//flow.setPurchaseTemplateName("买卖合同-采购");
-		//flow.setSalesTemplateName("买卖合同-销售");
+		// flow.setPurchaseTemplateName("买卖合同-采购");
+		// flow.setSalesTemplateName("买卖合同-销售");
 
 		flow.setPurchaseTemplateName("废纸外合同范本-采购");
 		flow.setSalesTemplateName("废纸代理采购协议范本-销售");
-		//flow.setPurchaseTemplateName("\u5E9F\u7EB8\u5916\u5408\u540C\u8303\u672C-\u91C7\u8D2D");
-		//flow.setSalesTemplateName("\u5E9F\u7EB8\u4EE3\u7406\u91C7\u8D2D\u534F\u8BAE\u8303\u672C-\u9500\u552E");
+		// flow.setPurchaseTemplateName("\u5E9F\u7EB8\u5916\u5408\u540C\u8303\u672C-\u91C7\u8D2D");
+		// flow.setSalesTemplateName("\u5E9F\u7EB8\u4EE3\u7406\u91C7\u8D2D\u534F\u8BAE\u8303\u672C-\u9500\u552E");
 		flow.setTradeContract(tradeContract);
 		flow.setUserName("clw");
 		try {

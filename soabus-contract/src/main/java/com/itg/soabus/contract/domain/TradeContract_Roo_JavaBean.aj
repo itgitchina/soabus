@@ -66,6 +66,14 @@ privileged aspect TradeContract_Roo_JavaBean {
         this.customer = customer;
     }
     
+    public String TradeContract.getPurchaseGroup() {
+        return this.purchaseGroup;
+    }
+    
+    public void TradeContract.setPurchaseGroup(String purchaseGroup) {
+        this.purchaseGroup = purchaseGroup;
+    }
+    
     public Date TradeContract.getSignDate() {
         return this.signDate;
     }
@@ -272,6 +280,14 @@ privileged aspect TradeContract_Roo_JavaBean {
     
     public void TradeContract.setMarkTxt(String markTxt) {
         this.markTxt = markTxt;
+    }
+    
+    public String TradeContract.getUnit() {
+        return this.unit;
+    }
+    
+    public void TradeContract.setUnit(String unit) {
+        this.unit = unit;
     }
     
     public byte[] TradeContract.getSalesDoc() {

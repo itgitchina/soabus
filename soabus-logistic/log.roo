@@ -1,0 +1,10 @@
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-25 16:57:48
+project --topLevelPackage com.itg.soabus.logistic --projectName soabus-logistic --java 7 --packaging WAR
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-25 16:58:00
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-25 16:58:55
+jpa setup --database MSSQL --provider HIBERNATE 
+web mvc setup
+entity jpa --class com.itg.soabus.logistic.domain.SupplierAppInfo
+entity jpa --class ~.domain.SupplierProperty
+entity jpa --class com.itg.soabus.logistic.domain.StorageLocation
+jms setup --provider ACTIVEMQ_IN_MEMORY 
