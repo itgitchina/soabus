@@ -22,7 +22,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.itg.soabus.contract.common.DateConverter;
+import com.itg.soabus.common.DateConverter;
 
 @RooJavaBean
 @RooJpaActiveRecord(finders = { "findTradeContractsByContractNoEquals" })

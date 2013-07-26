@@ -2,10 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.itg</groupId>
 	<artifactId>soabus-contract</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>soabus-contract</name>
 
 	<url>http://www.springframework.org/spring-ws</url>
@@ -648,17 +646,17 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.8.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.itg</groupId>
+			<artifactId>soabus-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
-	<properties>
-		<aspectj.version>1.7.0</aspectj.version>
-		<java.version>7</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<cxf.version>2.7.5</cxf.version>
-		<spring.version>3.2.3.RELEASE</spring.version>
-		<slf4j.version>1.7.2</slf4j.version>
-		<roo.version>1.2.3.RELEASE</roo.version>
-		<xdocreport.version>1.0.2</xdocreport.version>
-	</properties>
 
 
+	<parent>
+		<groupId>com.itg</groupId>
+		<artifactId>soabusParent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 </project>

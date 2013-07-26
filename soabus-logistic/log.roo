@@ -8,3 +8,11 @@ entity jpa --class com.itg.soabus.logistic.domain.SupplierAppInfo
 entity jpa --class ~.domain.SupplierProperty
 entity jpa --class com.itg.soabus.logistic.domain.StorageLocation
 jms setup --provider ACTIVEMQ_IN_MEMORY 
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-25 18:36:19
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2013-07-26 10:39:01
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2013-07-26 10:54:41
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-07-26 12:29:49
+focus --class ~.logistic.domain.SupplierAppInfo
+finder list --depth 1
+finder list --filter key
+finder list 

@@ -5,6 +5,7 @@ package com.itg.soabus.logistic.domain;
 
 import com.itg.soabus.logistic.domain.StorageLocation;
 import com.itg.soabus.logistic.domain.SupplierAppInfo;
+import com.itg.soabus.logistic.domain.SupplierAppInfoKey;
 import com.itg.soabus.logistic.domain.SupplierProperty;
 import java.util.List;
 
@@ -24,6 +25,22 @@ privileged aspect SupplierAppInfo_Roo_JavaBean {
     
     public void SupplierAppInfo.setStorages(List<StorageLocation> storages) {
         this.storages = storages;
+    }
+    
+    public String SupplierAppInfo.getOaResponse() {
+        return this.oaResponse;
+    }
+    
+    public void SupplierAppInfo.setOaResponse(String oaResponse) {
+        this.oaResponse = oaResponse;
+    }
+    
+    public SupplierAppInfoKey SupplierAppInfo.getKey() {
+        return this.key;
+    }
+    
+    public void SupplierAppInfo.setKey(SupplierAppInfoKey key) {
+        this.key = key;
     }
     
 }

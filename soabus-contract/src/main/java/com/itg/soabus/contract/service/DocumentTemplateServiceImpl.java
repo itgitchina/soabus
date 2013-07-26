@@ -62,9 +62,10 @@ import weaver.soa.workflow.request.ObjectFactory;
 import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 
-import com.itg.soabus.contract.common.AmtInChsWords;
-import com.itg.soabus.contract.common.AmtInEngWords.DefaultProcessor;
-import com.itg.soabus.contract.common.Result;
+import com.itg.soabus.common.AmtInChsWords;
+import com.itg.soabus.common.OAService;
+import com.itg.soabus.common.Result;
+import com.itg.soabus.common.AmtInEngWords.DefaultProcessor;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.contract.domain.TradeContractItem;
 import com.itg.soabus.messaging.TradeContractWorkflow;
@@ -89,6 +90,9 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private OAService oaService;
 
 	@Resource(name = "wsContext")
 	private WebServiceContext wsCtxt;
@@ -129,7 +133,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			TradeContract tradeContract, String salesTemplateName,
 			String purchaseTemplateName) throws SerialException, SQLException {
 		Result result = new Result();
-		boolean b = checkAuthByLdap(userName, password);
+		boolean b = oaService.checkAuthByLdap(userName, password);
 		if (!b) {
 			result.setMsg("\u7528\u6237\u540D\u5BC6\u7801\u9519\u8BEF"); // user
 																			// auth
@@ -203,43 +207,8 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			return false;
 		}
 
-		RequestService service = new RequestService();
-		RequestServicePortType port = service.getRequestServiceHttpPort();
+		return oaService.checkWorkFlowExists(requestId);
 
-		RequestInfo requestInfo = port.getRequest(requestId);
-
-		if (requestInfo != null) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	private Boolean checkAuthByLdap(String username, String password) {
-		Hashtable<String, String> env = new Hashtable<String, String>(11);
-		boolean b = false;
-		env.put(Context.INITIAL_CONTEXT_FACTORY,
-				"com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(Context.PROVIDER_URL, "ldap://itgpdc.itg.net:389");
-		env.put(Context.SECURITY_AUTHENTICATION, "simple");
-		env.put(Context.REFERRAL, "follow");
-
-		if (!username.contains("@itg.net")) {
-			username = username.concat("@itg.net");
-		}
-		env.put(Context.SECURITY_PRINCIPAL, username);
-		env.put(Context.SECURITY_CREDENTIALS, password);
-		try {
-			DirContext ctx = new InitialDirContext(env);
-			b = true;
-			ctx.close();
-			logger.info("user " + username + " successful checked!");
-		} catch (NamingException e) {
-			b = false;
-			logger.error("user " + username + e.getMessage());
-		}
-		return b;
 	}
 
 	public void sendMessage(Object messageObject) {
@@ -350,7 +319,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 		ObjectFactory objFactory = new ObjectFactory();
 		RequestInfo in0 = new RequestInfo();
-		String creatorid = getOAUserId(userName).toString();
+		String creatorid = oaService.getOAUserId(userName).toString();
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
 		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("383"));
 
@@ -378,17 +347,19 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 						.toString()));
 
 		properties.getProperty().add(
-				makeProperty("BB",
-						getOACurrencyId(tradeContract.getPurchaseCurrency())));
+				makeProperty("BB", oaService.getOACurrencyId(tradeContract
+						.getPurchaseCurrency())));
 
 		properties.getProperty().add(makeProperty("hqfs", creatorid));
 		properties.getProperty().add(
 				makeProperty("title", tradeContract.getExternalNo()));
 
 		properties.getProperty().add(
-				makeProperty("dept", getOAUserDept(userName).toString()));
+				makeProperty("dept", oaService.getOAUserDept(userName)
+						.toString()));
 		properties.getProperty().add(
-				makeProperty("corp", getOAUserCorp(userName).toString()));
+				makeProperty("corp", oaService.getOAUserCorp(userName)
+						.toString()));
 
 		properties
 				.getProperty()
@@ -408,11 +379,11 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 						+ tradeContract.getContractNo(), "http:"
 						+ tradeContract.getContractNo() + "-\u9500\u552E.docx"));
 
-		properties
-				.getProperty()
-				.add(makeProperty(
+		properties.getProperty().add(
+				makeProperty(
 						"ptxz",
-						getOADomainValue("7869", tradeContract.getCompanyCode())));
+						oaService.getOADomainValue("7869",
+								tradeContract.getCompanyCode())));
 
 		mainTable.setProperty(objFactory
 				.createMainTableInfoProperty(properties));
@@ -445,160 +416,6 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		tradeContract.setOaResponse(r);
 
 		return 0;
-	}
-
-	private Integer getOAUserId(String userName) {
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		if (userName.contains("@itg.net")) {
-			userName = userName.replace("@itg.net", "");
-		}
-		paramMap.put("loginid", userName);
-
-		Integer loginId = jdbcTemplate.query(
-				"select id, loginid from hrmresource where loginid=:loginid",
-				paramMap, new ResultSetExtractor<Integer>() {
-
-					@Override
-					public Integer extractData(ResultSet rs)
-							throws SQLException, DataAccessException {
-
-						Integer loginId = -1;
-						if (rs.next()) {
-							loginId = rs.getInt(1);
-						}
-						return loginId;
-					}
-
-				});
-
-		if (loginId == -1) {
-			logger.error("Can't find user " + userName
-					+ "'s OA login id, start workflow fail!!");
-		}
-		return loginId;
-
-	}
-
-	private Integer getOAUserDept(String userName) {
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		if (userName.contains("@itg.net")) {
-			userName = userName.replace("@itg.net", "");
-		}
-		paramMap.put("loginid", userName);
-
-		Integer loginId = jdbcTemplate.query(
-				"select id, dept from hrmresource where loginid=:loginid",
-				paramMap, new ResultSetExtractor<Integer>() {
-
-					@Override
-					public Integer extractData(ResultSet rs)
-							throws SQLException, DataAccessException {
-
-						Integer loginId = -1;
-						if (rs.next()) {
-							loginId = rs.getInt(2);
-						}
-						return loginId;
-					}
-
-				});
-
-		if (loginId == -1) {
-			logger.error("Can't find user " + userName
-					+ "'s OA login id, start workflow fail!!");
-		}
-		return loginId;
-
-	}
-
-	private String getOACurrencyId(String currency) {
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		if (currency.equals("CNY")) {
-			currency = "RMB";
-		}
-		paramMap.put("currencyname", currency);
-		Integer id = jdbcTemplate.query(
-				"select  id from fnaCurrency where currencyname=:currencyname",
-				paramMap, new ResultSetExtractor<Integer>() {
-
-					@Override
-					public Integer extractData(ResultSet rs)
-							throws SQLException, DataAccessException {
-
-						Integer id = -1;
-						if (rs.next()) {
-							id = rs.getInt(1);
-						}
-						return id;
-					}
-
-				});
-
-		return id.toString();
-
-	}
-
-	private String getOADomainValue(String fieldId, String selectName) {
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-
-		paramMap.put("fieldid", fieldId);
-		paramMap.put("selectname", selectName);
-		Integer id = jdbcTemplate
-				.query("select selectvalue from workflow_selectitem where fieldid=:fieldid and selectname=:selectname",
-						paramMap, new ResultSetExtractor<Integer>() {
-
-							@Override
-							public Integer extractData(ResultSet rs)
-									throws SQLException, DataAccessException {
-
-								Integer loginId = -1;
-								if (rs.next()) {
-									loginId = rs.getInt(1);
-								}
-								return loginId;
-							}
-
-						});
-
-		return id.toString();
-
-	}
-
-	private Integer getOAUserCorp(String userName) {
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		if (userName.contains("@itg.net")) {
-			userName = userName.replace("@itg.net", "");
-		}
-		paramMap.put("loginid", userName);
-
-		Integer loginId = jdbcTemplate.query(
-				"select id, corp from hrmresource where loginid=:loginid",
-				paramMap, new ResultSetExtractor<Integer>() {
-
-					@Override
-					public Integer extractData(ResultSet rs)
-							throws SQLException, DataAccessException {
-
-						Integer loginId = -1;
-						if (rs.next()) {
-							loginId = rs.getInt(2);
-						}
-						return loginId;
-					}
-
-				});
-
-		if (loginId == -1) {
-			logger.error("Can't find user " + userName
-					+ "'s OA login id, start workflow fail!!");
-		}
-		return loginId;
-
 	}
 
 	private Property makeProperty(String name, String value) {

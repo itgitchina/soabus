@@ -9,7 +9,8 @@ import org.springframework.roo.addon.tostring.RooToString;
 @RooJpaActiveRecord
 public class SupplierProperty {
 
+	private Integer no;
 	private String name;
 	private String value;
-	
+
 }

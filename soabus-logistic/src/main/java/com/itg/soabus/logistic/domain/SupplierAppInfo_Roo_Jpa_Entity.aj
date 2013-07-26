@@ -6,31 +6,15 @@ package com.itg.soabus.logistic.domain;
 import com.itg.soabus.logistic.domain.SupplierAppInfo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Version;
 
 privileged aspect SupplierAppInfo_Roo_Jpa_Entity {
     
     declare @type: SupplierAppInfo: @Entity;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long SupplierAppInfo.id;
-    
     @Version
     @Column(name = "version")
     private Integer SupplierAppInfo.version;
-    
-    public Long SupplierAppInfo.getId() {
-        return this.id;
-    }
-    
-    public void SupplierAppInfo.setId(Long id) {
-        this.id = id;
-    }
     
     public Integer SupplierAppInfo.getVersion() {
         return this.version;

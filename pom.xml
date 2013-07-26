@@ -10,9 +10,16 @@
   <name>soabusParent</name>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<aspectj.version>1.7.0</aspectj.version>
+		<java.version>6</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<cxf.version>2.7.5</cxf.version>
+		<spring.version>3.2.3.RELEASE</spring.version>
+		<slf4j.version>1.7.2</slf4j.version>
+		<roo.version>1.2.4.RELEASE</roo.version>
+		<xdocreport.version>1.0.2</xdocreport.version>
+	</properties>
 
   <dependencies>
     <dependency>
@@ -21,11 +28,27 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-jdbc</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-core</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-context</artifactId>
+    	<version>${spring.version}</version>
+    </dependency>
   </dependencies>
   <modules>
   	
   	<module>soabus-contract</module>
   	<module>soabus-oaservice</module>
   	<module>soabus-logistic</module>
+  	<module>soabus-common</module>
   </modules>
 </project>

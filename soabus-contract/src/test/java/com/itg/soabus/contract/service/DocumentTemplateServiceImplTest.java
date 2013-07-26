@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.itg.soabus.contract.common.Result;
+import com.itg.soabus.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.contract.domain.TradeContractItem;
 import com.itg.soabus.contract.service.DocumentTemplateServiceImpl;

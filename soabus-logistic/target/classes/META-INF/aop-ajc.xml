@@ -4,7 +4,6 @@
 <aspect name="com.itg.soabus.logistic.domain.SupplierProperty_Roo_Jpa_ActiveRecord"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierProperty_Roo_ToString"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierAppInfo_Roo_ToString"/>
-<aspect name="com.itg.soabus.logistic.common.Result_Roo_JavaBean"/>
 <aspect name="com.itg.soabus.logistic.domain.StorageLocation_Roo_ToString"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierAppInfo_Roo_Configurable"/>
 <aspect name="com.itg.soabus.logistic.domain.StorageLocation_Roo_Configurable"/>
@@ -15,6 +14,7 @@
 <aspect name="com.itg.soabus.logistic.domain.StorageLocation_Roo_Jpa_ActiveRecord"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierAppInfo_Roo_Jpa_ActiveRecord"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierProperty_Roo_JavaBean"/>
+<aspect name="com.itg.soabus.logistic.domain.SupplierAppInfoKey_Roo_JavaBean"/>
 <aspect name="com.itg.soabus.logistic.domain.SupplierAppInfo_Roo_JavaBean"/>
 </aspects>
 </aspectj>

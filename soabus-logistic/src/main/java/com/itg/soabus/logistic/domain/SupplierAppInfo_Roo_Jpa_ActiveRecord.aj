@@ -4,6 +4,7 @@
 package com.itg.soabus.logistic.domain;
 
 import com.itg.soabus.logistic.domain.SupplierAppInfo;
+import com.itg.soabus.logistic.domain.SupplierAppInfoKey;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,9 +29,9 @@ privileged aspect SupplierAppInfo_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery("SELECT o FROM SupplierAppInfo o", SupplierAppInfo.class).getResultList();
     }
     
-    public static SupplierAppInfo SupplierAppInfo.findSupplierAppInfo(Long id) {
-        if (id == null) return null;
-        return entityManager().find(SupplierAppInfo.class, id);
+    public static SupplierAppInfo SupplierAppInfo.findSupplierAppInfo(SupplierAppInfoKey key) {
+        if (key == null) return null;
+        return entityManager().find(SupplierAppInfo.class, key);
     }
     
     public static List<SupplierAppInfo> SupplierAppInfo.findSupplierAppInfoEntries(int firstResult, int maxResults) {
@@ -49,7 +50,7 @@ privileged aspect SupplierAppInfo_Roo_Jpa_ActiveRecord {
         if (this.entityManager.contains(this)) {
             this.entityManager.remove(this);
         } else {
-            SupplierAppInfo attached = SupplierAppInfo.findSupplierAppInfo(this.id);
+            SupplierAppInfo attached = SupplierAppInfo.findSupplierAppInfo(this.key);
             this.entityManager.remove(attached);
         }
     }

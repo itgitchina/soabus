@@ -33,8 +33,8 @@ import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 import weaver.soa.workflow.request.RequestLog;
 
-import com.itg.soabus.contract.common.AmtInChsWords;
-import com.itg.soabus.contract.common.Result;
+import com.itg.soabus.common.AmtInChsWords;
+import com.itg.soabus.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.contract.domain.TradeContractItem;
 import com.itg.soabus.contract.service.DocumentTemplateService;

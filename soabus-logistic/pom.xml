@@ -7,22 +7,6 @@
 	<packaging>war</packaging>
 	<version>0.1.0.BUILD-SNAPSHOT</version>
 	<name>soabus-logistic</name>
-	<properties>
-		<aspectj.version>1.7.0</aspectj.version>
-		<java.version>7</java.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<roo.version>1.2.3.RELEASE</roo.version>
-		<slf4j.version>1.7.2</slf4j.version>
-		<spring.version>3.2.3.RELEASE</spring.version>
-
-
-		<cxf.version>2.7.5</cxf.version>
-
-
-
-
-
-	</properties>
 
 
 	<profiles>
@@ -397,6 +381,16 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.itg</groupId>
+			<artifactId>soabus-oaservice</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itg</groupId>
+			<artifactId>soabus-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -598,4 +592,9 @@
 			</resource>
 		</resources>
 	</build>
+	<parent>
+		<groupId>com.itg</groupId>
+		<artifactId>soabusParent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
 </project>

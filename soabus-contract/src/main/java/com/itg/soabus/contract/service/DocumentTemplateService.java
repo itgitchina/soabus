@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import com.itg.soabus.contract.common.Result;
+import com.itg.soabus.common.Result;
 import com.itg.soabus.contract.domain.TradeContract;
 import com.itg.soabus.messaging.TradeContractWorkflow;
 
