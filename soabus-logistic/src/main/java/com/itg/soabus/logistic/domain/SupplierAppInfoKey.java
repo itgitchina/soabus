@@ -1,5 +1,7 @@
 package com.itg.soabus.logistic.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 import javax.validation.constraints.Size;
 
@@ -7,7 +9,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @Embeddable
 @RooJavaBean
-public class SupplierAppInfoKey {
+public class SupplierAppInfoKey implements Serializable {
 
 	@Size(max = 10)
 	private String lgfnr; // SAP供应商编号

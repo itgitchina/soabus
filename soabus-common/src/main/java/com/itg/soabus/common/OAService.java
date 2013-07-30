@@ -21,20 +21,28 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import weaver.soa.workflow.request.Cell;
+import weaver.soa.workflow.request.ObjectFactory;
+import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 
 import com.itg.soabus.oaservice.RequestService;
 import com.itg.soabus.oaservice.RequestServicePortType;
 
-@Service
 public class OAService {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
-	final ApplicationContext context = new ClassPathXmlApplicationContext(
-			"META-INF/spring/applicationContext.xml");
 
-	@Autowired
+	// @Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
+
+	public NamedParameterJdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	public Boolean checkAuthByLdap(String username, String password) {
 		Hashtable<String, String> env = new Hashtable<String, String>(11);
@@ -228,6 +236,30 @@ public class OAService {
 		}
 		return loginId;
 
+	}
+
+	public Property makeProperty(String name, String value) {
+		return makeProperty(name, value, null);
+
+	}
+
+	public Property makeProperty(String name, String value, String type) {
+
+		Property p = new Property();
+		ObjectFactory objFactory = new ObjectFactory();
+		p.setName(objFactory.createPropertyName(name));
+		p.setValue(objFactory.createPropertyValue(value));
+		p.setType(objFactory.createPropertyType(type));
+		return p;
+
+	}
+
+	public Cell makeCell(String name, String value) {
+		ObjectFactory objFactory = new ObjectFactory();
+		Cell cell = objFactory.createCell();
+		cell.setName(objFactory.createCellName(name));
+		cell.setValue(objFactory.createCellValue(value));
+		return cell;
 	}
 
 }

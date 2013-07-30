@@ -25,7 +25,7 @@ import com.itg.soabus.contract.service.DocumentTemplateServiceImpl;
 import com.itg.soabus.messaging.TradeContractWorkflow;
 
 @ContextConfiguration(locations = {
-// "/META-INF/spring/applicationContext-jms.xml",
+ "/META-INF/spring/applicationContext-jms.xml",
 "/META-INF/spring/applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentTemplateServiceImplTest {

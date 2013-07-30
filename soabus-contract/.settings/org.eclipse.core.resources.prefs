@@ -5,4 +5,5 @@ encoding//src/main/webapp/WEB-INF/views/contractNoFound.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/redirectToOA.jsp=UTF-8
 encoding//src/test/java=UTF-8
 encoding//src/test/resources=UTF-8
+encoding//target/surefire-reports/com.itg.soabus.contract.service.DocumentTemplateServiceImplTest-output.txt=GBK
 encoding/<project>=UTF-8

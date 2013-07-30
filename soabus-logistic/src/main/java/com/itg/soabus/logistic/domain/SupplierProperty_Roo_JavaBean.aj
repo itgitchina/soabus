@@ -7,6 +7,14 @@ import com.itg.soabus.logistic.domain.SupplierProperty;
 
 privileged aspect SupplierProperty_Roo_JavaBean {
     
+    public Integer SupplierProperty.getNo() {
+        return this.no;
+    }
+    
+    public void SupplierProperty.setNo(Integer no) {
+        this.no = no;
+    }
+    
     public String SupplierProperty.getName() {
         return this.name;
     }

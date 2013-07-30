@@ -1,15 +1,29 @@
 package com.itg.soabus.logistic.service;
 
+import java.util.Date;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import weaver.soa.workflow.request.ArrayOfCell;
+import weaver.soa.workflow.request.ArrayOfDetailTable;
 import weaver.soa.workflow.request.ArrayOfProperty;
+import weaver.soa.workflow.request.ArrayOfRow;
+import weaver.soa.workflow.request.Cell;
+import weaver.soa.workflow.request.DetailTable;
+import weaver.soa.workflow.request.DetailTableInfo;
 import weaver.soa.workflow.request.MainTableInfo;
 import weaver.soa.workflow.request.ObjectFactory;
+import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
+import weaver.soa.workflow.request.Row;
 
+import com.ibm.icu.text.SimpleDateFormat;
 import com.itg.soabus.common.OAService;
 import com.itg.soabus.common.Result;
 import com.itg.soabus.logistic.domain.SupplierAppInfo;
@@ -22,6 +36,8 @@ public class SupplierServiceImpl implements SupplierService {
 	@Autowired
 	private OAService oaService;
 
+	final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Override
 	public Result apply(String userName, String password,
 			SupplierAppInfo supplierAppInfo) {
@@ -29,11 +45,14 @@ public class SupplierServiceImpl implements SupplierService {
 		Result result = new Result();
 		if (checkWorkFlowExists(supplierAppInfo)) {
 			result.setResult(-1);
-			result.setMsg("流程已经存在！");
+			// result.setMsg("流程已经存在！");
 			return result;
 		}
 
 		result = startSupplierAppWorkflow(userName, password, supplierAppInfo);
+		supplierAppInfo.merge();
+		result.setResult(0);
+		result.setMsg("success!");
 		return result;
 
 	}
@@ -59,8 +78,7 @@ public class SupplierServiceImpl implements SupplierService {
 		RequestInfo in0 = new RequestInfo();
 		String creatorid = oaService.getOAUserId(userName).toString();
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
-		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("383"));
-
+		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));
 
 		in0.setDescription(objFactory.createRequestInfoDescription(getProperty(
 				supplierAppInfo.getProperties(), "供应商")));
@@ -68,56 +86,17 @@ public class SupplierServiceImpl implements SupplierService {
 		in0.setRemindtype(objFactory.createRequestInfoRemindtype("0"));// 提醒类型
 
 		MainTableInfo mainTable = new MainTableInfo();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		ArrayOfProperty properties = objFactory.createArrayOfProperty();
 
-		properties.getProperty().add(makeProperty("sqrzjbr", creatorid));
 		properties.getProperty().add(
-				makeProperty("ztc", tradeContract.getExternalNo()));
+				oaService.makeProperty("ername", creatorid));
 		properties.getProperty().add(
-				makeProperty("kh", tradeContract.getSupplier()));
+				oaService.makeProperty("sqrq", sdf.format(new Date())));
 		properties.getProperty().add(
-				makeProperty("zje", tradeContract.getTtlPurchaseAmount()
-						.toString()));
-
-		properties.getProperty().add(
-				makeProperty("BB", oaService.getOACurrencyId(tradeContract
-						.getPurchaseCurrency())));
-
-		properties.getProperty().add(makeProperty("hqfs", creatorid));
-		properties.getProperty().add(
-				makeProperty("title", tradeContract.getExternalNo()));
-
-		properties.getProperty().add(
-				makeProperty("dept", oaService.getOAUserDept(userName)
-						.toString()));
-		properties.getProperty().add(
-				makeProperty("corp", oaService.getOAUserCorp(userName)
-						.toString()));
-
-		properties
-				.getProperty()
-				.add(makeProperty(
-						"appfj",
-						"http://"
-								+ documentServerAddress
-								+ "/soabus/contract/downloadtxt?type=purchase&contractno="
-								+ tradeContract.getContractNo(), "http:"
-								+ tradeContract.getContractNo()
-								+ "-\u91C7\u8D2D.docx"));
-
-		properties
-				.getProperty()
-				.add(makeProperty("appfj", "http://" + documentServerAddress
-						+ "/soabus/contract/downloadtxt?type=sales&contractno="
-						+ tradeContract.getContractNo(), "http:"
-						+ tradeContract.getContractNo() + "-\u9500\u552E.docx"));
-
-		properties.getProperty().add(
-				makeProperty(
-						"ptxz",
-						oaService.getOADomainValue("7869",
-								tradeContract.getCompanyCode())));
+				oaService.makeProperty("ergrp",
+						oaService.getOAUserDept(userName).toString()));
 
 		mainTable.setProperty(objFactory
 				.createMainTableInfoProperty(properties));
@@ -127,11 +106,40 @@ public class SupplierServiceImpl implements SupplierService {
 
 		in0.setIsNextFlow(objFactory.createRequestInfoIsNextFlow("0"));
 
+		ArrayOfRow rows = objFactory.createArrayOfRow();
+
+		for (SupplierProperty p : supplierAppInfo.getProperties()) {
+			Row row = objFactory.createRow();
+			ArrayOfCell cells = objFactory.createArrayOfCell();
+			cells.getCell().add(oaService.makeCell("MC", p.getName()));
+			cells.getCell().add(oaService.makeCell("NR", p.getValue()));
+			row.setCell(objFactory.createRowCell(cells));
+			rows.getRow().add(row);
+
+		}
+
+		ArrayOfDetailTable arrayDetailTable = objFactory
+				.createArrayOfDetailTable();
+		DetailTable detailTable = objFactory.createDetailTable();
+
+		arrayDetailTable.getDetailTable().add(detailTable);
+
+		detailTable.setId(objFactory.createDetailTableId("0"));
+		detailTable.setRow(objFactory.createDetailTableRow(rows));
+
+		DetailTableInfo detailTableInfo = objFactory.createDetailTableInfo();
+		detailTableInfo.setDetailTable(objFactory
+				.createDetailTableInfoDetailTable(arrayDetailTable));
+
+		in0.setDetailTableInfo(objFactory
+				.createRequestInfoDetailTableInfo(detailTableInfo));
+
 		String r = port.createRequest(in0);
+
+		supplierAppInfo.setOaResponse(r);
 
 		logger.debug("call webservice result:" + r);
 
-		
 		return null;
 
 	}

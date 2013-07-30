@@ -88,11 +88,14 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	@Autowired
 	private transient JmsOperations jmsOperations;
 
+	// @Autowired
+	// private transient JmsTemplate jmsTemplate;
+
 	@Autowired
 	private NamedParameterJdbcTemplate jdbcTemplate;
 
 	@Autowired
-	private OAService oaService;
+	private OAService oAService;
 
 	@Resource(name = "wsContext")
 	private WebServiceContext wsCtxt;
@@ -133,7 +136,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			TradeContract tradeContract, String salesTemplateName,
 			String purchaseTemplateName) throws SerialException, SQLException {
 		Result result = new Result();
-		boolean b = oaService.checkAuthByLdap(userName, password);
+		boolean b = oAService.checkAuthByLdap(userName, password);
 		if (!b) {
 			result.setMsg("\u7528\u6237\u540D\u5BC6\u7801\u9519\u8BEF"); // user
 																			// auth
@@ -207,7 +210,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			return false;
 		}
 
-		return oaService.checkWorkFlowExists(requestId);
+		return oAService.checkWorkFlowExists(requestId);
 
 	}
 
@@ -319,7 +322,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 		ObjectFactory objFactory = new ObjectFactory();
 		RequestInfo in0 = new RequestInfo();
-		String creatorid = oaService.getOAUserId(userName).toString();
+		String creatorid = oAService.getOAUserId(userName).toString();
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
 		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("383"));
 
@@ -347,7 +350,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 						.toString()));
 
 		properties.getProperty().add(
-				makeProperty("BB", oaService.getOACurrencyId(tradeContract
+				makeProperty("BB", oAService.getOACurrencyId(tradeContract
 						.getPurchaseCurrency())));
 
 		properties.getProperty().add(makeProperty("hqfs", creatorid));
@@ -355,10 +358,10 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 				makeProperty("title", tradeContract.getExternalNo()));
 
 		properties.getProperty().add(
-				makeProperty("dept", oaService.getOAUserDept(userName)
+				makeProperty("dept", oAService.getOAUserDept(userName)
 						.toString()));
 		properties.getProperty().add(
-				makeProperty("corp", oaService.getOAUserCorp(userName)
+				makeProperty("corp", oAService.getOAUserCorp(userName)
 						.toString()));
 
 		properties
@@ -382,7 +385,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		properties.getProperty().add(
 				makeProperty(
 						"ptxz",
-						oaService.getOADomainValue("7869",
+						oAService.getOADomainValue("7869",
 								tradeContract.getCompanyCode())));
 
 		mainTable.setProperty(objFactory

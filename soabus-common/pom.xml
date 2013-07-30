@@ -1,26 +1,103 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.itg</groupId>
-    <artifactId>soabusParent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>soabus-common</artifactId>
-  <dependencies>
-  	<dependency>
-  		<groupId>commons-beanutils</groupId>
-  		<artifactId>commons-beanutils</artifactId>
-  		<version>1.8.3</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.slf4j</groupId>
-  		<artifactId>slf4j-api</artifactId>
-  		<version>1.7.2</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.itg</groupId>
-  		<artifactId>soabus-oaservice</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.itg</groupId>
+		<artifactId>soabusParent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>soabus-common</artifactId>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<db.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver>
+				<db.url>jdbc:sqlserver://localhost;databaseName=soabus</db.url>
+				<db.username>sa</db.username>
+				<db.password>36987</db.password>
+
+				<cargo.remote.username>admin</cargo.remote.username>
+				<cargo.remote.password>maven0512</cargo.remote.password>
+				<cargo.tomcat.manager.url>http://172.16.123.77:8080/manager/text</cargo.tomcat.manager.url>
+
+				<oa.server.address>172.16.10.111:7089</oa.server.address>
+
+
+			</properties>
+		</profile>
+
+		<profile>
+			<id>qas</id>
+			<properties>
+				<db.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver>
+				<db.url>jdbc:sqlserver://172.16.10.70;databaseName=soabus</db.url>
+				<db.username>soabusdbo</db.username>
+				<db.password>Db050@bus</db.password>
+
+				<cargo.remote.username>admin</cargo.remote.username>
+				<cargo.remote.password>maven0512</cargo.remote.password>
+				<cargo.tomcat.manager.url>http://172.16.10.54:8080/manager/text</cargo.tomcat.manager.url>
+				<oa.server.address>172.16.10.111:7089</oa.server.address>
+
+			</properties>
+		</profile>
+
+	</profiles>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+
+					<include>template/*.docx</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>template/*.docx</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.8.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itg</groupId>
+			<artifactId>soabus-oaservice</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+	</dependencies>
 </project>

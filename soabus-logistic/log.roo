@@ -16,3 +16,8 @@ focus --class ~.logistic.domain.SupplierAppInfo
 finder list --depth 1
 finder list --filter key
 finder list 
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-07-26 17:13:11
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-07-30 13:34:25
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-07-30 13:49:54
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-07-30 13:50:01
+// [failed] hint

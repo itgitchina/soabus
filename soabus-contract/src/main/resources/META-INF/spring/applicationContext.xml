@@ -78,7 +78,7 @@
 	<bean
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		id="entityManagerFactory">
-		<property name="persistenceUnitName" value="persistenceUnit" />
+		<property name="persistenceUnitName" value="persistenceUnit-soabus-contract" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
@@ -90,6 +90,9 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="oAService" class="com.itg.soabus.common.OAService">
+		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
 
 
 </beans>
