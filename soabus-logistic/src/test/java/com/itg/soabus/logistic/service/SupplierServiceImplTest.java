@@ -40,6 +40,8 @@ public class SupplierServiceImplTest {
 		SupplierProperty p = new SupplierProperty();
 		p.setName("供应商");
 		p.setValue("供应商名称!");
+		properties.add(p);
+		p = new SupplierProperty();
 		p.setName("法人代表");
 		p.setValue("法人代表!");
 

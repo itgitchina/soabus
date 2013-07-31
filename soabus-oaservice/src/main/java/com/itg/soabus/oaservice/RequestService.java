@@ -15,7 +15,7 @@ import javax.xml.ws.Service;
  * 
  */
 @WebServiceClient(name = "RequestService", 
-                  wsdlLocation = "http://172.16.10.111:7089/services/RequestService?wsdl",
+                  wsdlLocation = "http://oa.itg.net/services/RequestService?wsdl",
                   targetNamespace = "http://localhost/services/RequestService") 
 public class RequestService extends Service {
 
@@ -26,11 +26,11 @@ public class RequestService extends Service {
     static {
         URL url = null;
         try {
-            url = new URL("http://172.16.10.111:7089/services/RequestService?wsdl");
+            url = new URL("http://oa.itg.net/services/RequestService?wsdl");
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(RequestService.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "http://172.16.10.111:7089/services/RequestService?wsdl");
+                     "Can not initialize the default wsdl from {0}", "http://oa.itg.net/services/RequestService?wsdl");
         }
         WSDL_LOCATION = url;
     }

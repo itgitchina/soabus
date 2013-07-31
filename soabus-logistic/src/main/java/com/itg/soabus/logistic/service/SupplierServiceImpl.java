@@ -91,7 +91,7 @@ public class SupplierServiceImpl implements SupplierService {
 		ArrayOfProperty properties = objFactory.createArrayOfProperty();
 
 		properties.getProperty().add(
-				oaService.makeProperty("ername", creatorid));
+				oaService.makeProperty("ernam", creatorid));
 		properties.getProperty().add(
 				oaService.makeProperty("sqrq", sdf.format(new Date())));
 		properties.getProperty().add(
@@ -124,7 +124,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 		arrayDetailTable.getDetailTable().add(detailTable);
 
-		detailTable.setId(objFactory.createDetailTableId("0"));
+		detailTable.setId(objFactory.createDetailTableId("1"));
 		detailTable.setRow(objFactory.createDetailTableRow(rows));
 
 		DetailTableInfo detailTableInfo = objFactory.createDetailTableInfo();
