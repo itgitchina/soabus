@@ -23,7 +23,7 @@
 
 				<oa.server.address>172.16.10.111:7089</oa.server.address>
 
-
+				<oa.wsdlLocation>http://172.16.10.111:7089/services/RequestService?wsdl</oa.wsdlLocation>
 			</properties>
 		</profile>
 
@@ -39,7 +39,7 @@
 				<cargo.remote.password>maven0512</cargo.remote.password>
 				<cargo.tomcat.manager.url>http://172.16.10.54:8080/manager/text</cargo.tomcat.manager.url>
 				<oa.server.address>172.16.10.111:7089</oa.server.address>
-
+				<oa.wsdlLocation>http://172.16.10.111:7089/services/RequestService?wsdl</oa.wsdlLocation>
 			</properties>
 		</profile>
 
@@ -56,7 +56,7 @@
 				<cargo.remote.password>maven0512</cargo.remote.password>
 				<cargo.tomcat.manager.url>http://172.16.10.54:8080/manager/text</cargo.tomcat.manager.url>
 				<oa.server.address>oa.itg.net</oa.server.address>
-
+				<oa.wsdlLocation>http://oa.itg.net/services/RequestService?wsdl</oa.wsdlLocation>
 			</properties>
 		</profile>
 	</profiles>

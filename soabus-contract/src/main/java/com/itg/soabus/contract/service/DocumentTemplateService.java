@@ -2,6 +2,7 @@ package com.itg.soabus.contract.service;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 
 import com.itg.soabus.common.Result;
@@ -32,8 +33,8 @@ public interface DocumentTemplateService {
 
 	public void processMessage(TradeContractWorkflow flow)
 			throws IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException;
+			NoSuchMethodException, MalformedURLException;
 
 	public Integer startContractAduitWorkflow(String userName,
-			TradeContract tradeContract, String documentServerAddress);
+			TradeContract tradeContract, String documentServerAddress) throws MalformedURLException;
 }

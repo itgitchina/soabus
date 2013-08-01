@@ -2,6 +2,7 @@ package com.itg.soabus.contract.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,8 +27,8 @@ import com.itg.soabus.contract.service.DocumentTemplateServiceImpl;
 import com.itg.soabus.messaging.TradeContractWorkflow;
 
 @ContextConfiguration(locations = {
- "/META-INF/spring/applicationContext-jms.xml",
-"/META-INF/spring/applicationContext.xml" })
+		"/META-INF/spring/applicationContext-jms.xml",
+		"/META-INF/spring/applicationContext.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DocumentTemplateServiceImplTest {
 
@@ -37,7 +39,7 @@ public class DocumentTemplateServiceImplTest {
 			.getLogger(DocumentTemplateServiceImplTest.class);
 
 	// @Test
-	public void testStartContractAduitWorkflow() {
+	public void testStartContractAduitWorkflow() throws MalformedURLException {
 		TradeContract tradeContract = TradeContract
 				.findTradeContractsByContractNoEquals("contract_no")
 				.getSingleResult();
@@ -46,7 +48,7 @@ public class DocumentTemplateServiceImplTest {
 	}
 
 	@Test
-	public void testProcessMessage() {
+	public void testProcessMessage() throws MalformedURLException {
 		TradeContract tradeContract = TradeContract
 				.findTradeContractsByContractNoEquals("contract_no")
 				.getSingleResult();

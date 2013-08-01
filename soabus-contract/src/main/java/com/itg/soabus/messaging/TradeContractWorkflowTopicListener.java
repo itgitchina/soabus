@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class TradeContractWorkflowTopicListener {
 	private DocumentTemplateService documentTemplateService;
 
 	public void onMessage(Object message) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException {
+			InvocationTargetException, NoSuchMethodException, MalformedURLException {
 		// System.out.println("JMS message received: " + message);
 		logger.info(message.toString());
 

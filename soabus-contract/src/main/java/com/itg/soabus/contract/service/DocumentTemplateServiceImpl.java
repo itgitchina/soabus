@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
@@ -81,6 +83,9 @@ import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 
 @Service
 public class DocumentTemplateServiceImpl implements DocumentTemplateService {
+
+	@Value("${oa_wsdlLocation}")
+	private String oaWsdlLocation;
 
 	final Logger logger = LoggerFactory
 			.getLogger(DocumentTemplateServiceImpl.class);
@@ -266,7 +271,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 	public void processMessage(TradeContractWorkflow flow)
 			throws IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException {
+			NoSuchMethodException, MalformedURLException {
 
 		TradeContract tradeContract = flow.getTradeContract();
 		String salesTemplateName = flow.getSalesTemplateName();
@@ -317,8 +322,11 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	}
 
 	public Integer startContractAduitWorkflow(String userName,
-			TradeContract tradeContract, String documentServerAddress) {
-		RequestService service = new RequestService();
+			TradeContract tradeContract, String documentServerAddress) throws MalformedURLException {
+		RequestService service = null;
+		
+			service = new RequestService(new URL(oaWsdlLocation));
+		
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 		ObjectFactory objFactory = new ObjectFactory();
 		RequestInfo in0 = new RequestInfo();
