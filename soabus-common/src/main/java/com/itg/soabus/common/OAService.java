@@ -53,7 +53,7 @@ public class OAService {
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
 		env.put(Context.REFERRAL, "follow");
 
-		if (!username.contains("@itg.net")) {
+		if (!username.toLowerCase().contains("@itg.net")) {
 			username = username.concat("@itg.net");
 		}
 		env.put(Context.SECURITY_PRINCIPAL, username);

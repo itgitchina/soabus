@@ -158,6 +158,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			result.setResult(-2);
 			return result;
 		}
+		userName = userName.toLowerCase().replaceAll("@itg.net", "");
 
 		List<TradeContract> tcs = TradeContract
 				.findTradeContractsByContractNoEquals(
@@ -322,11 +323,12 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 	}
 
 	public Integer startContractAduitWorkflow(String userName,
-			TradeContract tradeContract, String documentServerAddress) throws MalformedURLException {
+			TradeContract tradeContract, String documentServerAddress)
+			throws MalformedURLException {
 		RequestService service = null;
-		
-			service = new RequestService(new URL(oaWsdlLocation));
-		
+
+		service = new RequestService(new URL(oaWsdlLocation));
+
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 		ObjectFactory objFactory = new ObjectFactory();
 		RequestInfo in0 = new RequestInfo();

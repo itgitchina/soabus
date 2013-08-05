@@ -63,6 +63,24 @@
 			</resource>
 		</resources>
 
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+
+					<include>template/*.docx</include>
+				</includes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>template/*.docx</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
 	</build>
 	<dependencies>
 		<dependency>
