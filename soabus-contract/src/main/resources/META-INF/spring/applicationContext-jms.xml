@@ -7,22 +7,14 @@
 		http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 	<!-- Embedded ActiveMQ Broker JMX MBean server enabled by default, access 
-		via: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi -->
-	<amq:broker persistent="true" useJmx="true" useShutdownHook="false">
-		<amq:transportConnectors>
-			<amq:transportConnector uri="tcp://localhost:61616" />
-		</amq:transportConnectors>
-
-		<amq:persistenceAdapter>
-			<amq:jdbcPersistenceAdapter dataSource="#dataSource">
-
-			</amq:jdbcPersistenceAdapter>
-		</amq:persistenceAdapter>
-
-	</amq:broker>
+		via: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi <amq:broker persistent="true" 
+		useJmx="true" useShutdownHook="false"> <amq:transportConnectors> <amq:transportConnector 
+		uri="tcp://localhost:61616" /> </amq:transportConnectors> <amq:persistenceAdapter> 
+		<amq:jdbcPersistenceAdapter dataSource="#dataSource"> </amq:jdbcPersistenceAdapter> 
+		</amq:persistenceAdapter> </amq:broker> -->
 	<!-- JMS ConnectionFactory to use for ActiveMQ, configuring the embedded 
 		broker using XML -->
-	<amq:connectionFactory brokerURL="vm://localhost"
+	<amq:connectionFactory brokerURL="tcp://localhost:61616"
 		id="jmsFactory" />
 	<!-- JMS ConnectionFactory to use for Spring JMS template -->
 	<bean class="org.springframework.jms.connection.CachingConnectionFactory"
