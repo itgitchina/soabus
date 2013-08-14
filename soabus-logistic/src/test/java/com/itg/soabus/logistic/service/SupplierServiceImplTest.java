@@ -2,6 +2,7 @@ package com.itg.soabus.logistic.service;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class SupplierServiceImplTest {
 	private SupplierServiceImpl service;
 
 	@Test
-	public void testStartSupplierAppWorkflow() {
+	public void testStartSupplierAppWorkflow() throws MalformedURLException {
 		SupplierAppInfo supplier = new SupplierAppInfo();
 
 		SupplierAppInfoKey key = new SupplierAppInfoKey();

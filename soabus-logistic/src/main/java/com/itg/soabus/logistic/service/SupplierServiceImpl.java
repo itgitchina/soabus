@@ -1,6 +1,8 @@
 package com.itg.soabus.logistic.service;
 
 import java.util.Date;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import javax.xml.bind.JAXBElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import weaver.soa.workflow.request.ArrayOfCell;
 import weaver.soa.workflow.request.ArrayOfDetailTable;
@@ -33,6 +36,9 @@ import com.itg.soabus.oaservice.RequestServicePortType;
 
 public class SupplierServiceImpl implements SupplierService {
 
+	@Value("${oa_wsdlLocation}")
+	private String oaWsdlLocation;
+
 	@Autowired
 	private OAService oaService;
 
@@ -40,7 +46,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 	@Override
 	public Result apply(String userName, String password,
-			SupplierAppInfo supplierAppInfo) {
+			SupplierAppInfo supplierAppInfo) throws MalformedURLException {
 
 		Result result = new Result();
 		if (checkWorkFlowExists(supplierAppInfo)) {
@@ -70,9 +76,12 @@ public class SupplierServiceImpl implements SupplierService {
 	}
 
 	public Result startSupplierAppWorkflow(String userName, String password,
-			SupplierAppInfo supplierAppInfo) {
+			SupplierAppInfo supplierAppInfo) throws MalformedURLException {
 
-		RequestService service = new RequestService();
+		RequestService service;
+
+		service = new RequestService(new URL(oaWsdlLocation));
+
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 		ObjectFactory objFactory = new ObjectFactory();
 		RequestInfo in0 = new RequestInfo();
@@ -90,8 +99,8 @@ public class SupplierServiceImpl implements SupplierService {
 
 		ArrayOfProperty properties = objFactory.createArrayOfProperty();
 
-		properties.getProperty().add(
-				oaService.makeProperty("ernam", creatorid));
+		properties.getProperty()
+				.add(oaService.makeProperty("ernam", creatorid));
 		properties.getProperty().add(
 				oaService.makeProperty("sqrq", sdf.format(new Date())));
 		properties.getProperty().add(
