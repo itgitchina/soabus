@@ -32,13 +32,13 @@
 			<id>qas</id>
 			<properties>
 				<db.driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</db.driver>
-				<db.url>jdbc:sqlserver://172.16.10.70;databaseName=soabus</db.url>
+				<db.url>jdbc:sqlserver://soabus-dev.itg.net;databaseName=soabus</db.url>
 				<db.username>soabusdbo</db.username>
-				<db.password>Db050@bus</db.password>
+				<db.password>c9222f</db.password>
 
 				<cargo.remote.username>admin</cargo.remote.username>
 				<cargo.remote.password>maven0512</cargo.remote.password>
-				<cargo.tomcat.manager.url>http://172.16.10.54:8080/manager/text</cargo.tomcat.manager.url>
+				<cargo.tomcat.manager.url>http://soabus-dev.itg.net:8080/manager/text</cargo.tomcat.manager.url>
 				<oa.server.address>172.16.10.111:7089</oa.server.address>
 				<oa.wsdlLocation>http://172.16.10.111:7089/services/RequestService?wsdl</oa.wsdlLocation>
 			</properties>
