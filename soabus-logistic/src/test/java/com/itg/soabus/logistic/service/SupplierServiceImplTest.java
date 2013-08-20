@@ -18,8 +18,8 @@ import com.itg.soabus.logistic.domain.SupplierProperty;
 
 @ContextConfiguration(locations = {
 		// "/META-INF/spring/applicationContext-jms.xml",
-		"/META-INF/spring/applicationContext-cxf.xml",
-		"/META-INF/spring/applicationContext.xml" })
+		"/META-INF/spring/applicationContext.xml",
+		"/META-INF/spring/applicationContext-cxf.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SupplierServiceImplTest {
 

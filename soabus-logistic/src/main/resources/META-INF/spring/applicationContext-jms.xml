@@ -7,7 +7,7 @@
 		via: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi -->
 	<!-- JMS ConnectionFactory to use for ActiveMQ, configuring the embedded 
 		broker using XML -->
-	<amq:connectionFactory brokerURL="vm://localhost"
+	<amq:connectionFactory brokerURL="tcp://localhost:61616"
 		id="jmsFactory" />
 	<!-- JMS ConnectionFactory to use for Spring JMS template -->
 	<bean class="org.springframework.jms.connection.CachingConnectionFactory"

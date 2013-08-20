@@ -8,8 +8,21 @@
 		within your classpath, provided they fall under the META-INF/spring directory. 
 		The located property files are parsed and their values can then be used within 
 		application context files in the form of ${propertyKey}. -->
-	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
-	<context:property-placeholder location="classpath*:META-INF/*.properties" />
+
+	<context:property-placeholder
+		location="classpath*:META-INF/spring/database.properties,classpath*:META-INF/soabus-logistic.properties"
+		order="1" ignore-unresolvable="false" file-encoding="UTF-8"
+		ignore-resource-not-found="false" />
+
+	<!-- <context:property-placeholder location="classpath*:META-INF/soabus-logistic.properties" 
+		order="2" ignore-unresolvable="false" file-encoding="UTF-8" ignore-resource-not-found="false" 
+		/> -->
+
+
+
+	<context:annotation-config />
+
+
 	<!-- Turn on AspectJ @Configurable support. As a result, any time you instantiate 
 		an object, Spring will attempt to perform dependency injection on that object. 
 		This occurs for instantiation via the "new" keyword, as well as via reflection. 
@@ -79,4 +92,5 @@
 	<bean id="oAService" class="com.itg.soabus.common.OAService">
 		<property name="jdbcTemplate" ref="jdbcTemplate"></property>
 	</bean>
+	
 </beans>
