@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import weaver.soa.workflow.request.ArrayOfCell;
 import weaver.soa.workflow.request.ArrayOfDetailTable;
@@ -27,7 +28,6 @@ import weaver.soa.workflow.request.Property;
 import weaver.soa.workflow.request.RequestInfo;
 import weaver.soa.workflow.request.Row;
 
-import com.ibm.icu.text.SimpleDateFormat;
 import com.itg.soabus.common.OAService;
 import com.itg.soabus.common.Result;
 import com.itg.soabus.logistic.domain.SupplierAppInfo;
@@ -56,7 +56,8 @@ public class SupplierServiceImpl implements SupplierService {
 			return result;
 		}
 
-		result = startSupplierAppWorkflow(userName, password, supplierAppInfo);
+		startSupplierAppWorkflow(userName, password, supplierAppInfo);
+
 		supplierAppInfo.merge();
 		result.setResult(0);
 		result.setMsg("success!");
@@ -91,12 +92,13 @@ public class SupplierServiceImpl implements SupplierService {
 		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));
 
 		in0.setDescription(objFactory.createRequestInfoDescription(getProperty(
-				supplierAppInfo.getProperties(), "供应商")));
+				supplierAppInfo.getProperties(), "仓储供应商全称")));
 		in0.setRequestlevel(objFactory.createRequestInfoRequestlevel("0"));// 紧急程度
 		in0.setRemindtype(objFactory.createRequestInfoRemindtype("0"));// 提醒类型
 
 		MainTableInfo mainTable = new MainTableInfo();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(
+				"yyyy-MM-dd");
 
 		ArrayOfProperty properties = objFactory.createArrayOfProperty();
 
@@ -118,12 +120,16 @@ public class SupplierServiceImpl implements SupplierService {
 
 		ArrayOfRow rows = objFactory.createArrayOfRow();
 
+		Integer i = 0;
 		for (SupplierProperty p : supplierAppInfo.getProperties()) {
 			Row row = objFactory.createRow();
 			ArrayOfCell cells = objFactory.createArrayOfCell();
 			cells.getCell().add(oaService.makeCell("MC", p.getName()));
 			cells.getCell().add(oaService.makeCell("NR", p.getValue()));
 			row.setCell(objFactory.createRowCell(cells));
+			row.setId(objFactory.createRowId(i.toString()));
+
+			i = i + 1;
 			rows.getRow().add(row);
 
 		}
@@ -132,11 +138,14 @@ public class SupplierServiceImpl implements SupplierService {
 				.createArrayOfDetailTable();
 		DetailTable detailTable = objFactory.createDetailTable();
 
-		arrayDetailTable.getDetailTable().add(detailTable);
+		
 
 		detailTable.setId(objFactory.createDetailTableId("1"));
 		detailTable.setRow(objFactory.createDetailTableRow(rows));
+		//detailTable.setRowCount(supplierAppInfo.getProperties().size());
 
+		arrayDetailTable.getDetailTable().add(detailTable);
+		
 		DetailTableInfo detailTableInfo = objFactory.createDetailTableInfo();
 		detailTableInfo.setDetailTable(objFactory
 				.createDetailTableInfoDetailTable(arrayDetailTable));

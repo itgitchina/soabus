@@ -258,7 +258,11 @@ public class OAService {
 		ObjectFactory objFactory = new ObjectFactory();
 		Cell cell = objFactory.createCell();
 		cell.setName(objFactory.createCellName(name));
-		cell.setValue(objFactory.createCellValue(value));
+		if (value != null) {
+			cell.setValue(objFactory.createCellValue(value));
+		} else {
+			cell.setValue(objFactory.createCellValue(""));
+		}
 		return cell;
 	}
 

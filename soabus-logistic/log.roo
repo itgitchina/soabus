@@ -22,3 +22,16 @@ finder list
 // Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-07-30 13:50:01
 // [failed] hint
 // Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-07-30 18:06:21
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-08-22 10:17:09
+focus --class ~.domain.SupplierAppInfo
+// [failed] finder list 
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-08-22 10:35:49
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log opened at 2013-08-22 10:42:49
+hint
+focus --class ~.domain.SupplierAppInfo
+// [failed] finder list
+help
+help finder
+hint finder
+// [failed] finder list
+// Spring Roo 1.2.4.RELEASE [rev 75337cf] log closed at 2013-08-22 10:44:03
