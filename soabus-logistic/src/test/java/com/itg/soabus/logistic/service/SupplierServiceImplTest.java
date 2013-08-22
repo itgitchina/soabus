@@ -32,20 +32,12 @@ public class SupplierServiceImplTest {
 	public void testStartSupplierAppWorkflow2() throws MalformedURLException {
 
 		SupplierAppInfoKey key = new SupplierAppInfoKey();
-		key.setLgfnr("0000000019");
+		key.setLgfnr("0000000020");
 		key.setOpeKind("00");
 		key.setOpeType("01");
 
 		SupplierAppInfo supplier = SupplierAppInfo.findSupplierAppInfo(key);
-		SupplierProperty p = new SupplierProperty();
-		p.setName("供应商");
-		p.setValue("供应商名称!");
-		supplier.getProperties().add(p);
-		p = new SupplierProperty();
-		p.setName("法人代表");
-		p.setValue("法人代表!");
 
-		supplier.getProperties().add(p);
 
 		service.startSupplierAppWorkflow("clw", "630821", supplier);
 

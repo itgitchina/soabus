@@ -1,5 +1,7 @@
 package com.itg.soabus.logistic.service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -52,15 +54,22 @@ public class SupplierServiceImpl implements SupplierService {
 		Result result = new Result();
 		if (checkWorkFlowExists(supplierAppInfo)) {
 			result.setResult(-1);
-			// result.setMsg("流程已经存在！");
+			result.setMsg("流程已经存在！");
 			return result;
 		}
 
 		startSupplierAppWorkflow(userName, password, supplierAppInfo);
 
 		supplierAppInfo.merge();
-		result.setResult(0);
-		result.setMsg("success!");
+		Integer r = Integer.parseInt(supplierAppInfo.getOaResponse());
+		result.setResult(r);
+
+		if (r > 0) {
+			result.setMsg("success!");
+		} else {
+			result.setMsg("fail!");
+		}
+
 		return result;
 
 	}
@@ -120,16 +129,26 @@ public class SupplierServiceImpl implements SupplierService {
 
 		ArrayOfRow rows = objFactory.createArrayOfRow();
 
-		Integer i = 0;
+		Comparator<SupplierProperty> c = new Comparator<SupplierProperty>() {
+
+			@Override
+			public int compare(SupplierProperty o1, SupplierProperty o2) {
+				return o1.getNo().compareTo(o2.getNo());
+
+			}
+
+		};
+		Collections.sort(supplierAppInfo.getProperties(), c);
+
 		for (SupplierProperty p : supplierAppInfo.getProperties()) {
+
 			Row row = objFactory.createRow();
 			ArrayOfCell cells = objFactory.createArrayOfCell();
 			cells.getCell().add(oaService.makeCell("MC", p.getName()));
-			cells.getCell().add(oaService.makeCell("NR", p.getValue()));
+			// cells.getCell().add(oaService.makeCell("NR", p.getValue()));
+			cells.getCell().add(oaService.makeCell("NR1", p.getValue()));
 			row.setCell(objFactory.createRowCell(cells));
-			row.setId(objFactory.createRowId(i.toString()));
 
-			i = i + 1;
 			rows.getRow().add(row);
 
 		}
@@ -138,14 +157,12 @@ public class SupplierServiceImpl implements SupplierService {
 				.createArrayOfDetailTable();
 		DetailTable detailTable = objFactory.createDetailTable();
 
-		
-
 		detailTable.setId(objFactory.createDetailTableId("1"));
 		detailTable.setRow(objFactory.createDetailTableRow(rows));
-		//detailTable.setRowCount(supplierAppInfo.getProperties().size());
+		// detailTable.setRowCount(supplierAppInfo.getProperties().size());
 
 		arrayDetailTable.getDetailTable().add(detailTable);
-		
+
 		DetailTableInfo detailTableInfo = objFactory.createDetailTableInfo();
 		detailTableInfo.setDetailTable(objFactory
 				.createDetailTableInfoDetailTable(arrayDetailTable));
