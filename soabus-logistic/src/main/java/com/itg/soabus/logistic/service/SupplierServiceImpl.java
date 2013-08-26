@@ -57,6 +57,13 @@ public class SupplierServiceImpl implements SupplierService {
 			result.setMsg("流程已经存在！");
 			return result;
 		}
+		
+		
+		if (!oaService.checkAuthByLdap(userName, password)){
+			result.setResult(-2);
+			result.setMsg("用户名、密码输入有误！");
+			return result;
+		}
 
 		startSupplierAppWorkflow(userName, password, supplierAppInfo);
 
@@ -98,7 +105,15 @@ public class SupplierServiceImpl implements SupplierService {
 		RequestInfo in0 = new RequestInfo();
 		String creatorid = oaService.getOAUserId(userName).toString();
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
-		in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));
+		
+		
+		if(supplierAppInfo.getKey().getOpeType().equals("01")){
+			in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));	
+		}else{
+			in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("426"));
+		}
+
+		
 
 		in0.setDescription(objFactory.createRequestInfoDescription(getProperty(
 				supplierAppInfo.getProperties(), "仓储供应商全称")));
@@ -116,8 +131,19 @@ public class SupplierServiceImpl implements SupplierService {
 		properties.getProperty().add(
 				oaService.makeProperty("sqrq", sdf.format(new Date())));
 		properties.getProperty().add(
-				oaService.makeProperty("ergrp",
-						oaService.getOAUserDept(userName).toString()));
+				oaService.makeProperty("wlgyshm", supplierAppInfo.getKey()
+						.getLgfnr()));
+
+		properties.getProperty().add(
+				oaService.makeProperty("gyslx", supplierAppInfo.getKey()
+						.getOpeType()));
+
+		properties.getProperty().add(
+				oaService.makeProperty("fplc", supplierAppInfo.getKey()
+						.getOpeKind()));
+
+		properties.getProperty()
+				.add(oaService.makeProperty("ernam", creatorid));
 
 		mainTable.setProperty(objFactory
 				.createMainTableInfoProperty(properties));
@@ -146,7 +172,7 @@ public class SupplierServiceImpl implements SupplierService {
 			ArrayOfCell cells = objFactory.createArrayOfCell();
 			cells.getCell().add(oaService.makeCell("MC", p.getName()));
 			// cells.getCell().add(oaService.makeCell("NR", p.getValue()));
-			cells.getCell().add(oaService.makeCell("NR1", p.getValue()));
+			cells.getCell().add(oaService.makeCell("NR", p.getValue()));
 			row.setCell(objFactory.createRowCell(cells));
 
 			rows.getRow().add(row);
