@@ -57,12 +57,18 @@ public class SupplierServiceImpl implements SupplierService {
 			result.setMsg("流程已经存在！");
 			return result;
 		}
-		
-		
-		if (!oaService.checkAuthByLdap(userName, password)){
+
+		if (!oaService.checkAuthByLdap(userName, password)) {
 			result.setResult(-2);
 			result.setMsg("用户名、密码输入有误！");
 			return result;
+		}
+
+		SupplierAppInfo supplierAppInfo2 = SupplierAppInfo
+				.findSupplierAppInfo(supplierAppInfo.getKey());
+
+		if (supplierAppInfo2 != null) {
+			supplierAppInfo.setVersion(supplierAppInfo2.getVersion());
 		}
 
 		startSupplierAppWorkflow(userName, password, supplierAppInfo);
@@ -105,15 +111,12 @@ public class SupplierServiceImpl implements SupplierService {
 		RequestInfo in0 = new RequestInfo();
 		String creatorid = oaService.getOAUserId(userName).toString();
 		in0.setCreatorid(objFactory.createRequestInfoCreatorid(creatorid));
-		
-		
-		if(supplierAppInfo.getKey().getOpeType().equals("01")){
-			in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));	
-		}else{
+
+		if (supplierAppInfo.getKey().getOpeType().equals("01")) {
+			in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("425"));
+		} else {
 			in0.setWorkflowid(objFactory.createRequestInfoWorkflowid("426"));
 		}
-
-		
 
 		in0.setDescription(objFactory.createRequestInfoDescription(getProperty(
 				supplierAppInfo.getProperties(), "仓储供应商全称")));
@@ -144,6 +147,18 @@ public class SupplierServiceImpl implements SupplierService {
 
 		properties.getProperty()
 				.add(oaService.makeProperty("ernam", creatorid));
+
+		properties.getProperty().add(
+				oaService.makeProperty("ergrp",
+						oaService.getOAUserDept(userName).toString()));
+
+		properties.getProperty().add(
+				oaService.makeProperty("CREATOR",
+						oaService.getOAUserDept(userName).toString()));
+
+		properties.getProperty().add(
+				oaService.makeProperty("BMTXT",
+						oaService.getOAUserDept(userName).toString()));
 
 		mainTable.setProperty(objFactory
 				.createMainTableInfoProperty(properties));
@@ -206,7 +221,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 	}
 
-	public boolean checkWorkFlowExists(SupplierAppInfo supplierAppInfo) {
+	public boolean checkWorkFlowExists(SupplierAppInfo supplierAppInfo) throws MalformedURLException {
 
 		SupplierAppInfo app = SupplierAppInfo
 				.findSupplierAppInfo(supplierAppInfo.getKey());
@@ -225,7 +240,7 @@ public class SupplierServiceImpl implements SupplierService {
 			return false;
 		}
 
-		return oaService.checkWorkFlowExists(requestId);
+		return oaService.checkWorkFlowExists(requestId, oaWsdlLocation);
 
 	}
 

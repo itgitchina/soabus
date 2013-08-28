@@ -139,7 +139,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 
 	public Result generateDocument(String userName, String password,
 			TradeContract tradeContract, String salesTemplateName,
-			String purchaseTemplateName) throws SerialException, SQLException {
+			String purchaseTemplateName) throws SerialException, SQLException, MalformedURLException {
 		Result result = new Result();
 		boolean b = oAService.checkAuthByLdap(userName, password);
 		if (!b) {
@@ -197,7 +197,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 		return result;
 	}
 
-	private boolean checkWorkflowExists(String contractNo) {
+	private boolean checkWorkflowExists(String contractNo) throws MalformedURLException {
 
 		TradeContract tc = getTradeContractByNo(contractNo);
 
@@ -216,7 +216,7 @@ public class DocumentTemplateServiceImpl implements DocumentTemplateService {
 			return false;
 		}
 
-		return oAService.checkWorkFlowExists(requestId);
+		return oAService.checkWorkFlowExists(requestId, oaWsdlLocation);
 
 	}
 

@@ -115,7 +115,7 @@ public class DocumentTemplateServiceImplTest {
 	}
 
 	// @Test
-	public void testGenerateDocumnent() throws SerialException, SQLException {
+	public void testGenerateDocumnent() throws SerialException, SQLException, MalformedURLException {
 
 		TradeContract tc = new TradeContract();
 		tc.setCompany("company");

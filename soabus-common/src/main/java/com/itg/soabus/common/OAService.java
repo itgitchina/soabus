@@ -1,5 +1,7 @@
 package com.itg.soabus.common;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -65,7 +67,8 @@ public class OAService {
 			logger.info("user " + username + " successful checked!");
 		} catch (NamingException e) {
 			b = false;
-			logger.error("user " + username + e.getMessage());
+			logger.error("user " + username + "password: " + password
+					+ e.getMessage());
 		}
 		return b;
 	}
@@ -158,9 +161,9 @@ public class OAService {
 
 	}
 
-	public boolean checkWorkFlowExists(Integer requestId) {
+	public boolean checkWorkFlowExists(Integer requestId, String oaWsdlLocation) throws MalformedURLException {
 
-		RequestService service = new RequestService();
+		RequestService service = new RequestService(new URL(oaWsdlLocation));
 		RequestServicePortType port = service.getRequestServiceHttpPort();
 
 		RequestInfo requestInfo = port.getRequest(requestId);

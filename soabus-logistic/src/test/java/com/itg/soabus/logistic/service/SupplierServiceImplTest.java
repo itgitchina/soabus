@@ -28,6 +28,25 @@ public class SupplierServiceImplTest {
 	private SupplierServiceImpl service;
 
 	@Test
+	public void testCheckWorkFlowExists() throws MalformedURLException{
+
+		
+		SupplierAppInfoKey key = new SupplierAppInfoKey();
+		key.setLgfnr("0000000058");
+		key.setOpeKind("00");
+		key.setOpeType("01");
+
+		SupplierAppInfo supplier = new SupplierAppInfo();
+		
+		
+		service.checkWorkFlowExists(supplier);
+
+		
+		
+	}
+	
+	
+	@Test
 	@Transactional
 	public void testStartSupplierAppWorkflow2() throws MalformedURLException {
 

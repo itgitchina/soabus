@@ -29,12 +29,14 @@ public interface DocumentTemplateService {
 	@WebMethod(operationName = "generateDocument")
 	public Result generateDocument(String userName, String password,
 			TradeContract tradeContract, String salesTemplateName,
-			String purchaseTemplateName) throws SerialException, SQLException;
+			String purchaseTemplateName) throws SerialException, SQLException,
+			MalformedURLException;
 
 	public void processMessage(TradeContractWorkflow flow)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException, MalformedURLException;
 
 	public Integer startContractAduitWorkflow(String userName,
-			TradeContract tradeContract, String documentServerAddress) throws MalformedURLException;
+			TradeContract tradeContract, String documentServerAddress)
+			throws MalformedURLException;
 }
